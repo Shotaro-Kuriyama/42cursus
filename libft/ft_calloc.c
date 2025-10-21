@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 16:31:53 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/21 17:27:15 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/21 18:04:45 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,45 +34,64 @@ nmemb * sizeで指定したサイズのメモリ領域確保に
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 
-void	*ft_calloc(size_t nmemb, size_t size)
+void	*ft_memset(void *s, int c, size_t n)
 {
 	unsigned char *p;
-	unsigned char s;
+	unsigned char d;
 	size_t i;
+	
+	p = (unsigned char*)s;
+	d = (unsigned char)c;
+	
+	i = 0;
+	while (i < n)
+	{
+		p[i] = d;
+		i++;
+	}
+
+	return s;
+}
+void	*ft_calloc(size_t nmemb, size_t size)
+{
+	unsigned char	*p;
 
 	if (nmemb == 0 || size == 0)
 	{
 		p = malloc(1);
+		if (!p)
+			return NULL;
 		return p;
 	}
-	s = (unsigned char)size;
-
-	p = (unsigned char *)malloc(size * nmemb);
-	if (!p)
+	if (nmemb > SIZE_MAX / size)
 		return NULL;
 
-	i = 0;
-	while(i < size * nmemb)
-	{
-		p[i] = 0;
-		i++;
-	}
-	return p;
+	p = (unsigned char *)malloc(nmemb * size);
+	if (!p)
+		return NULL;
+	
+	ft_memset(p, 0, nmemb * size);
+	return p;	
 }
 
 int main(void)
 {
 	size_t nmemb = 10;
-	size_t size = 0;
-	size_t i = 0;
+	size_t size = 2;
+
 
 	unsigned char *p = ft_calloc(nmemb, size);
+
+	size_t i = 0;
 	while (i < nmemb * size)
 	{
-		printf ("%02X", p[i]);
-		printf ("%c", ' ');
+		printf ("%02X ", p[i]);
 		i++;
 	}
 	printf("%c", '\n');
+
+	free(p);
+	return 0;
 }
