@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:01:21 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/20 11:18:26 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/24 20:07:39 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ DeepL.com（無料版）で翻訳しました。
 
 #include <stdio.h>
 
-size_t ft_strlen(const char *s)
+static size_t ft_strlen(const char *s)
 {
     size_t i;
 

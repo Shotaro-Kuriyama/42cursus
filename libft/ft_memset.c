@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 07:56:23 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/20 17:28:33 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/24 17:15:20 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -102,18 +102,18 @@ static void hexdump(const unsigned char *p, size_t n) {
 }
 
 int main(void) {
-    unsigned char buf[8];
+    unsigned char buf[0];
 
-    ft_memset(buf, 1000, sizeof buf);
+    memset(buf, 1000, sizeof buf);
     hexdump(buf, sizeof buf);   // 00 00 00 00 00 00 00 00
 
-    ft_memset(buf, '1', sizeof buf);
+    memset(buf, '1', sizeof buf);
     hexdump(buf, sizeof buf);   // 31 31 31 31 31 31 31 31 (0x31 = 1)
 
-    ft_memset(buf, 500, sizeof buf);
+    memset(buf, 500, sizeof buf);
     hexdump(buf, sizeof buf);   // F4 F4 F4 F4 F4 F4 F4 F4
 
-    ft_memset(buf, 0xAB, 5);
+    memset(buf, 0xAB, 5);
     hexdump(buf, sizeof buf);   // AB AB AB AB AB ?? ?? ??
     return 0;
 }

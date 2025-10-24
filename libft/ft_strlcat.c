@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:16:21 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/20 11:16:54 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/24 20:07:58 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@ strlcat() は文字列 src を dst の末尾に追加します。
 */
 #include <stdio.h>
 
-size_t ft_strlen(const char *s)
+static size_t ft_strlen(const char *s)
 {
     size_t i;
 
