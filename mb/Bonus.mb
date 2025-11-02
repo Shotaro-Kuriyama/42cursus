@@ -1,0 +1,51 @@
+いいね、いよいよ「ボーナス」パートのリスト操作です。まずは最初の関数 ft_lstnew を、超初心者向けにサクッと理解→実装→テストまで一気にいきましょう。
+
+そもそも「連結リスト」とは？
+
+配列：メモリ上に連続に並ぶ。途中で要素を挿入/削除が苦手（ずらす必要あり）。
+
+連結リスト：各要素（ノード）が「次のノードへのポインタ」を持ち、チェーンのように繋がる。途中挿入/削除が得意。
+
+今回のノード型（必ず libft.h に入れる）：
+
+typedef struct s_list
+{
+	void            *content; // データ本体へのポインタ（型は何でもOK）
+	struct s_list   *next;    // 次のノードへのポインタ（末尾なら NULL）
+} t_list;
+
+
+ft_lstnew でやること
+
+「新しいノードを1個だけ作って返す」関数です。
+
+malloc で t_list の分だけメモリを確保
+
+node->content に 引数でもらったポインタ をそのまま入れる
+※中身のコピーはしない
+
+node->next は 必ず NULL に初期化
+
+失敗したら NULL を返す
+
+実装例（42の規約的にもOKな最小限）
+
+libft.h（一部）
+
+#ifndef LIBFT_H
+# define LIBFT_H
+# include <stddef.h>
+
+typedef struct s_list
+{
+	void            *content;
+	struct s_list   *next;
+}	t_list;
+
+t_list	*ft_lstnew(void *content);
+
+#endif
+
+
+
+

@@ -5,88 +5,110 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/23 16:51:39 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/23 19:31:54 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/24 09:31:22 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/10/30 15:55:32 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <stddef.h>
 #include <stdlib.h>
-#include <stdio.h>
 
-static size_t word_count(const char *s, char c)
+size_t	count_word(const char *s, char c)
 {
-	size_t count;
-	size_t i;
-	size_t	l;
+	size_t	in_word;
+	size_t	count;
 
-	i = 0;
-	l = 0;
+	in_word = 1;
+	if (!s)
+		return (0);
 	count = 0;
-	while (s[i])
+	while (*s)
 	{
-		if (s[i] != c && l == 0)
+		if (*s != c && in_word == 1)
 		{
 			count++;
-			l = 1;
+			in_word = 0;
 		}
-		else if(s[i] == c)
-			l = 0;
-		i++;
+		else if (*s == c)
+			in_word = 1;
+		s++;
 	}
-	return count;
+	return (count);
 }
 
-static char *count(const char *start, size_t len)
+static char	*str_dup(const char *start, size_t len)
 {
-	char	*ret;
+	char	*p;
 	size_t	i;
 
-	ret = malloc(sizeof(*start) * (len+ 1));
+	p = (char *)malloc(sizeof(*p) * (len + 1));
+	if (!p)
+		return (NULL);
 	i = 0;
 	while (i < len)
 	{
-		ret[i] = start[i];
+		p[i] = start[i];
 		i++;
 	}
-	ret[i] = '\0';
-	return (ret);
+	p[i] = '\0';
+	return (p);
+}
+
+static void	*free_all(char **arr, size_t filled)
+{
+	while (filled > 0)
+	{
+		--filled;
+		free(arr[filled]);
+	}
+	free(arr);
+	return (NULL);
 }
 
 char	**ft_split(const char *s, char c)
 {
-	size_t len;
-	char **temp;
-	const char *start;
-	size_t i;
+	char		**p;
+	size_t		word;
+	size_t		i;
+	const char	*start;
 
-	len = word_count(s, c);
-
-	temp = (char **)malloc(sizeof(*s) * (len + 1));
-	if(!s)
-		return NULL;
+	word = count_word(s, c);
+	p = (char **)malloc(sizeof(*p) * (word + 1));
+	if (!p)
+		return (NULL);
 	i = 0;
-	while (i < len)
+	while (*s && i < word)
 	{
 		while (*s && *s == c)
 			s++;
 		start = s;
 		while (*s && *s != c)
 			s++;
-		temp[i] = count(start, (size_t)(s - start));
-		if (!temp)
-			
+		p[i] = str_dup(start, (size_t)(s - start));
+		if (!p[i])
+			return (free_all(p, i));
 		i++;
 	}
-	temp[i] = NULL;
-	return (temp);
+	p[i] = NULL;
+	return (p);
 }
 
-int main(void)
-{
-	char *s = "42Tokyo Apple Google";
-	char c = ' ';
-	char **result = ft_split(s,c);
-	for(int i = 0; result[i]; i++)
-	printf("%s\n", result[i]);
-}
+//#include <stdio.h>
+
+// int	main(void)
+//{
+//	char s[] = {",,,,,42Tokyo,Apple,,,Google,,,"};
+//	char c = ',';
+//	char **p = ft_split(s, c);
+
+//	size_t i;
+
+//	i = 0;
+//	while (p[i])
+//	{
+//		printf("%s\n", p[i]);
+//		free(p[i]);
+//		i++;
+//	}
+//	free(p);
+//}
