@@ -11,133 +11,72 @@ va_list 	va_start, va_arg, va_end, va_copyで使用される情報を保存し�
 */
 
 #include <stdio.h>
-#include "../libft.h"
+#include "ft_printf.h"
 
 int	ft_printf(const char *format, ...)
 {
 
 	va_list ap; //これはポインタ変数
+
+
+	if (!format)
+		return -1;
 	
 	va_start(ap, format); //apにformatの先頭ポインタをセットする。（ここではprintfの"%s %d"の""の先頭アドレス）
-
-
-
-	char c;
-	char *p;
-	void *q;
-	int j;
 	int total; //出力した文字の合計
 
 	total = 0;
 
 	while (*format)
 	{
-		while (*format != '%')
+		while (*format && *format != '%')
 		{
 			write(1, format, 1);
-			total = total + 1;
+			total += 1;
 			format++;
 			continue;
 		}
-
-		//format == '%
-
 		format++;
+		if (*format == '\0')
+			break;
 		if (*format == 'c')
 			total += ft_putchar(va_arg(ap, int));
 		else if (*format == 's')
-			total += ft_putstr(va_arg(ap, char *));
+			total += ft_putstr((char *)va_arg(ap, char *));
 		else if (*format == 'p')
-		{
-			q = va_arg(ap, void *);
-		}
-		else if (*format == 'd')
-		{
-			j = va_arg(ap, int);
-		}
-		else if (*format == 'i')
-		{
-			
-		}
+			total += ft_put_hex_ul(va_arg(ap, void *));
+		else if (*format == 'd' || *format == 'i')
+			total += ft_putnbr(va_arg(ap, int));
 		else if (*format == 'u')
-		{
-		
-			
-		}
+			total += ft_putunbr(va_arg(ap, unsigned int));
 		else if (*format == 'x')
-		{
-
-		}
+			total += ft_put_hex_x(va_arg(ap, unsigned int), 1);
 		else if (*format == 'X')
-		{
-
-		}
+			total += ft_put_hex_x(va_arg(ap, unsigned int), 0);
 		else if (*format == '%')
-			write(1, format, 1);
-
+			total += write(1, "%", 1);
+		format++;
 	}
 	va_end(ap); //apにNULLポインタがセットされて使えなくなる。
-
 	return total;
-
 }
-
-
-int putchar;
-int putstr;
-int putnbr;
-int putunbr;
-int puthex;
-int putptr;
-
-int ft_putstr(char *c)
-{
-	int i;
-
-	i = 0;
-	while(*c)
-	{
-		write(1, c. 1);
-		c++;
-		i++;
-	}
-	return (i);
-}
-
-int ft_putchar(int c)
-{
-	write(1, &c, 1);
-	return 1;
-}
-int ft_putnbr(int n)
-{
-	long nb;
-
-	nb = n;
-
-	char c;
-	static int count;
-
-	count = 0;
-	if (nb < 0)
-	{
-		write(1, "-", 1);
-		nb = -nb;
-		count++;
-	}
-
-	if(nb > 9)
-		ft_putnbr(nb / 10);
-	
-	c = nb % 10 + '0';
-	write(1, &c, 1);
-
-	return ++count;
-}
-
-int
-
+#include <limits.h>
 int main(void)
 {
-	printf("こんにちは %c, %d", 'A', 3);
+	char s[] = "42Tokああああyo";
+	void *p = s;
+
+	unsigned int i = -5432452;
+	unsigned int j = -62380252;
+	//printf(" %x, %X, \n", i, j);
+	//ft_printf(" %x, %X, \n", i, j);
+	//printf("%u\n", -42);
+	//printf("%zu\n", UINT_MAX - 42);
+	//ft_printf("%p\n",p);
+	printf("こんにちは %c, %s, %p, %d, %i, %u, %x, %X, %%\n", 'A', s, p,-42, -42, -42, i, j);
+	ft_printf("こんにちは %c, %s, %p, %d, %i, %u, %x, %X, %%\n", 'A', s, p,-42, -42, -42, i, j);
+
+//	printf("%d\n",printf(NULL));
+//	ft_printf("%d\n",ft_printf(NULL));
+//
 }
