@@ -15,18 +15,13 @@ va_list 	va_start, va_arg, va_end, va_copyで使用される情報を保存し�
 
 int	ft_printf(const char *format, ...)
 {
-
 	va_list ap; //これはポインタ変数
-
 
 	if (!format)
 		return -1;
-	
 	va_start(ap, format); //apにformatの先頭ポインタをセットする。（ここではprintfの"%s %d"の""の先頭アドレス）
 	int total; //出力した文字の合計
-
 	total = 0;
-
 	while (*format)
 	{
 		while (*format && *format != '%')

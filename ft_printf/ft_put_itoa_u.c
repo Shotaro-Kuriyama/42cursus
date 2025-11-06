@@ -1,34 +1,41 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_put_itoa_u.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/06 10:05:27 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/11/06 16:04:55 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/06 16:58:09 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "ft_printf.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-int	ft_putstr(char *c)
+int	ft_put_itoa_u(unsigned int n)
 {
-	int				i;
-	int				r;
-	unsigned char	uc;
+	int		count;
+	char	*nbrAddr;
 
-	r = 0;
-	i = 0;
-	while (*c)
+	count = 0;
+	nbrAddr = ft_itoa_u(n);
+	count = ft_putstr(nbrAddr);
+	if (count < 0)
 	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
-		i++;
+		free(nbrAddr);
+		return (-1);
 	}
-	return (i);
+	free(nbrAddr);
+	return (count);
 }
+
+// int	main(void)
+//{
+//	int i = -423;
+
+//	printf("\n%d\n", ft_put_itoa_u(i));
+//	printf("%u\n", i);
+
+//}

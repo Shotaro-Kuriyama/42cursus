@@ -1,40 +1,50 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   ft_put_hex_x.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/11/06 10:05:12 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/06 16:58:05 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "ft_printf.h"
+#include <stdio.h>
+#include <stdlib.h>
 
-static char	ft_tolower(char c)
+int	ft_put_hex_x(unsigned int n, int i)
 {
-	if (c >= 'A' && c <= 'Z')
-		c = c + ('a' - 'A');
-	return (c);
-}
+	unsigned int	count;
+	char			*nbrAddr;
+	char			*tolower;
 
-int	ft_put_hex_x(unsigned int ul, int i)
-{
-	int		count;
-	char	c;
-
-	count = 0;
-	if (ul > 15)
-		count += ft_put_hex_x(ul / 16, i);
-	if (ul % 16 >= 10)
+	nbrAddr = ft_itoa_hex(n);
+	tolower = nbrAddr;
+	if (i == 1)
 	{
-		c = 'A' + (ul % 16 - 10);
-		if(i == 1)
-			c = ft_tolower(c);
-		count += write(1, &c, 1);
+		while (*tolower)
+		{
+			if (*tolower >= 'a' && *tolower <= 'z')
+				*tolower -= ('a' - 'A');
+			tolower++;
+		}
 	}
-	else
+	count = ft_putstr(nbrAddr);
+	if (count < 0)
 	{
-		c = ul % 16 + '0';
-		count += write(1, &c, 1);
+		free(nbrAddr);
+		return (-1);
 	}
+	free(nbrAddr);
 	return (count);
 }
 
-
-//int	main(void)
+// int	main(void)
 //{
 //	int i = 12831084;
 
-//	printf("\n%d\n", ft_put_hex_x(i));
+//	printf("\n%d\n", ft_put_hex_x(i, 0));
+//	printf("%x\n", i);
 //}
