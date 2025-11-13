@@ -6,15 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 10:04:56 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/06 17:22:28 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/11 11:29:24 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #include "ft_printf.h"
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
 
 static size_t	count_len(unsigned long long n)
 {
@@ -42,7 +38,7 @@ char	*ft_itoa_hex(unsigned long long num)
 {
 	size_t	len;
 	char	*p;
-	char 	*hex;
+	char	*hex;
 
 	hex = "0123456789abcdef";
 	len = count_len(num);
@@ -52,11 +48,6 @@ char	*ft_itoa_hex(unsigned long long num)
 	if (num == 0)
 		return (num_zero(p));
 	p[len] = '\0';
-	if (num < 0)
-	{
-		p[0] = '-';
-		num = -num;
-	}
 	while (num > 0)
 	{
 		p[--len] = hex[num % 16];
@@ -64,7 +55,7 @@ char	*ft_itoa_hex(unsigned long long num)
 	}
 	return (p);
 }
-//int	main(void)
+// int	main(void)
 //{
 //	unsigned long i = 488952871;
 //	printf("%s", ft_itoa_hex(i));

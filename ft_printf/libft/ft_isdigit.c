@@ -1,39 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_isdigit.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/13 17:38:42 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/16 10:43:49 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/10/30 15:50:52 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-
-int	ft_putstr(const char *c)
+int	ft_isdigit(int c)
 {
-	int				i;
-	int				r;
-	unsigned char	uc;
-
-	r = 0;
-	i = 0;
-	if (!c)
-	{
-		if (write(1, "(null)", 6) != 6)
-			return (-1);
-		return (6);
-	}
-	while (*c)
-	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
-		i++;
-	}
-	return (i);
+	if (c >= '0' && c <= '9')
+		return (1);
+	return (0);
 }
+
+//#include <ctype.h>
+//#include <stdio.h>
+
+// int	main(void)
+//{
+//	char	c;
+
+//	c = 'A';
+//	printf("%d\n", isdigit(c));
+//	printf("%d\n", ft_isdigit(c));
+//}

@@ -1,39 +1,44 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putunbr.c                                       :+:      :+:    :+:   */
+/*   ft_atoi.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 16:04:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/09 18:35:00 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/21 15:32:25 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/10 16:51:45 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putunbr(unsigned int n)
+int	ft_atoi(const char *nptr)
 {
-	int		count;
-	char	*nbraddr;
+	int		a;
+	int64_t	result;
 
-	count = 0;
-	nbraddr = ft_itoa_u(n);
-	count = ft_putstr(nbraddr);
-	if (count < 0)
+	result = 0;
+	a = 1;
+	while (*nptr == ' ' || (*nptr >= 9 && *nptr <= 13))
+		nptr++;
+	if (*nptr == '+' || *nptr == '-')
 	{
-		free(nbraddr);
-		return (-1);
+		if (*nptr == '-')
+			a = -a;
+		nptr++;
 	}
-	free(nbraddr);
-	return (count);
+	result = 0;
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		result = result * 10 + (*nptr - '0');
+		nptr++;
+	}
+	return ((int)(a * result));
 }
 
 // int	main(void)
 //{
-//	int i = -423;
+//	char nptr[] = "  \n\t   -12315";
 
-//	printf("\n%d\n", ft_putunbr(i));
-//	printf("%u\n", i);
-
+//	printf("%d\n",atoi(nptr));
 //}

@@ -1,39 +1,35 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/13 17:38:42 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/18 07:42:54 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/08 18:18:20 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstr(const char *c)
+size_t	ft_strlen(const char *s)
 {
-	int				i;
-	int				r;
-	unsigned char	uc;
+	size_t	i;
 
-	r = 0;
+	if (!s)
+		return (0);
 	i = 0;
-	if (!c)
-	{
-		if (write(1, "(null)", 6) != 6)
-			return (-1);
-		return (6);
-	}
-	while (*c)
-	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
+	while (s[i] != '\0')
 		i++;
-	}
 	return (i);
 }
+
+// int	main(void)
+//{
+//	char	*p;
+
+//	// char	str[] = "42Tokyo";
+//	p = NULL;
+//	printf("%zu\n", ft_strlen(p)); // size_t型は%zu
+//	return (0);
+//}

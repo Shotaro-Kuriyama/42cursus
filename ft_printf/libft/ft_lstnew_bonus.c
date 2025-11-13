@@ -1,39 +1,37 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/13 17:38:42 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/26 14:24:39 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/08 17:13:29 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstr(const char *c)
+t_list	*ft_lstnew(void *content)
 {
-	int				i;
-	int				r;
-	unsigned char	uc;
+	t_list	*node;
 
-	r = 0;
-	i = 0;
-	if (!c)
-	{
-		if (write(1, "(null)", 6) != 6)
-			return (-1);
-		return (6);
-	}
-	while (*c)
-	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
-		i++;
-	}
-	return (i);
+	node = (t_list *)malloc(sizeof(t_list));
+	if (!node)
+		return (NULL);
+	node->content = content;
+	node->next = NULL;
+	return (node);
 }
+//#include <stdio.h>
+
+// int	main(void)
+//{
+//	char *s = "Hello";
+//	t_list *n = ft_lstnew(s);
+
+//	printf("%s\n", (char *)n->content);
+
+//	free(n);
+//	return (0);
+//}

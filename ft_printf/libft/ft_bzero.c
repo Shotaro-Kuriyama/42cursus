@@ -1,39 +1,42 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_bzero.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/13 17:38:42 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/18 10:13:25 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/10/30 15:50:22 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstr(const char *c)
+void	ft_bzero(void *s, size_t n)
 {
-	int				i;
-	int				r;
-	unsigned char	uc;
+	size_t			i;
+	unsigned char	*p;
 
-	r = 0;
+	p = (unsigned char *)s;
 	i = 0;
-	if (!c)
+	while (i < n)
 	{
-		if (write(1, "(null)", 6) != 6)
-			return (-1);
-		return (6);
-	}
-	while (*c)
-	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
+		p[i] = '\0';
 		i++;
 	}
-	return (i);
 }
+
+//#include <stdio.h>
+//#include <strings.h>
+
+// int main(void)
+//{
+//	char buf[] = "ABCDEFGHIJK";
+//	char buf2[] = "ABCDEFGHIJK";
+
+//	bzero(buf+2, 5);
+//	ft_bzero(buf2+2, 5);
+
+//	printf("%s\n", buf);
+//	printf("%s\n", buf2);
+//}

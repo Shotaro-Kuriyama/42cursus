@@ -5,15 +5,12 @@
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:03 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/06 15:07:51 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/24 12:17:33 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/09 18:12:26 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include <limits.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "libft.h"
 
 static size_t	count_len(int n)
 {
@@ -39,12 +36,14 @@ static char	*num_zero(char *p)
 	return (p);
 }
 
-char	*ft_itoa(int num)
+char	*ft_itoa(int n)
 {
+	long	num;
 	size_t	len;
 	char	*p;
-	
-	len = count_len(num);
+
+	num = n;
+	len = count_len(n);
 	p = (char *)malloc(sizeof(*p) * (len + 1));
 	if (!p)
 		return (NULL);
@@ -58,14 +57,20 @@ char	*ft_itoa(int num)
 	}
 	while (num > 0)
 	{
-		p[--len] = num % 10 + '0';
+		p[--len] = (char)((num % 10) + '0');
 		num = num / 10;
 	}
 	return (p);
 }
 
+//#include <stdio.h>
+
 // int	main(void)
 //{
-//	int i = -5879872;
-//	printf("%s\n", ft_itoa(i));
+//	int i = INT_MIN;
+
+//	char *p = ft_itoa(i);
+//	printf("%s\n", p);
+
+//	free(p);
 //}

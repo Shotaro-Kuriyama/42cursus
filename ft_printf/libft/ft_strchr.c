@@ -1,39 +1,40 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_putstr.c                                        :+:      :+:    :+:   */
+/*   ft_strchr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:26 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/13 17:38:42 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/20 11:37:54 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/08 17:14:18 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-int	ft_putstr(const char *c)
+char	*ft_strchr(const char *s, int c)
 {
-	int				i;
-	int				r;
 	unsigned char	uc;
 
-	r = 0;
-	i = 0;
-	if (!c)
+	uc = (unsigned char)c;
+	while (*s)
 	{
-		if (write(1, "(null)", 6) != 6)
-			return (-1);
-		return (6);
+		if ((const unsigned char)*s == uc)
+			return ((char *)s);
+		s++;
 	}
-	while (*c)
-	{
-		uc = *c;
-		r = write(1, &uc, 1);
-		if (r < 0)
-			return (-1);
-		c++;
-		i++;
-	}
-	return (i);
+	if ((unsigned char)*s == '\0' && uc == '\0')
+		return ((char *)s);
+	return (NULL);
 }
+
+//#include <stdio.h>
+//#include <string.h>
+
+// int	main(void)
+//{
+//	char s[] = "42Tokyo";
+//	int c = 'T';
+
+//	printf("%s\n", ft_strchr(s, c));
+//}

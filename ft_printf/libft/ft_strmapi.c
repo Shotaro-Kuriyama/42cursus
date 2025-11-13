@@ -1,63 +1,57 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_itoa_u.c                                        :+:      :+:    :+:   */
+/*   ft_strmapi.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/05 14:31:17 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/12 12:36:32 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/24 15:18:38 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/08 17:14:37 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
+#include "libft.h"
 
-static size_t	count_len(unsigned int n)
-{
-	size_t	len;
-	long	num;
-
-	len = 0;
-	num = n;
-	if (num <= 0)
-		len = 1;
-	while (num != 0)
-	{
-		len++;
-		num = num / 10;
-	}
-	return (len);
-}
-
-static char	*num_zero(char *p)
-{
-	p[0] = '0';
-	p[1] = '\0';
-	return (p);
-}
-
-char	*ft_itoa_u(unsigned int num)
+char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {
 	size_t	len;
 	char	*p;
+	size_t	i;
 
-	len = count_len(num);
+	if (!s || !f)
+		return (NULL);
+	len = ft_strlen(s);
 	p = (char *)malloc(sizeof(*p) * (len + 1));
 	if (!p)
 		return (NULL);
-	if (num == 0)
-		return (num_zero(p));
-	p[len] = '\0';
-	while (num > 0)
+	i = 0;
+	while (i < len)
 	{
-		p[--len] = num % 10 + '0';
-		num = num / 10;
+		p[i] = f((unsigned int)i, s[i]);
+		i++;
 	}
+	p[i] = '\0';
 	return (p);
 }
 
+//#include <stdio.h>
+
+// static char	ft_toupper1(unsigned int i, char c)
+//{
+//	unsigned char	uc;
+
+//	(void)i;
+//	uc = (unsigned char)c;
+//	if (uc >= 'a' && uc <= 'z')
+//		return (uc - ('a' - 'A'));
+//	return (c);
+//}
 // int	main(void)
 //{
-//	int i = 3847923;
-//	printf("\n%d\n", ft_itoa_u(i));
+//	char s[] = "42Tokyo";
+
+//	char *f;
+
+//	f = ft_strmapi(s, ft_toupper1);
+//	printf("%s\n", f);
 //}

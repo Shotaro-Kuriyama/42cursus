@@ -1,41 +1,46 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_put_itoa_u.c                                    :+:      :+:    :+:   */
+/*   ft_strdup.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 16:04:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/06 16:58:09 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/21 18:19:10 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/11/08 17:14:24 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include <stdio.h>
-#include <stdlib.h>
+#include "libft.h"
 
-int	ft_put_itoa_u(unsigned int n)
+char	*ft_strdup(const char *s)
 {
-	int		count;
-	char	*nbrAddr;
+	size_t	s_len;
+	char	*p;
+	size_t	i;
 
-	count = 0;
-	nbrAddr = ft_itoa_u(n);
-	count = ft_putstr(nbrAddr);
-	if (count < 0)
+	s_len = ft_strlen(s);
+	p = malloc(sizeof(*p) * (s_len + 1));
+	if (!p)
+		return (NULL);
+	i = 0;
+	while (i < s_len)
 	{
-		free(nbrAddr);
-		return (-1);
+		p[i] = s[i];
+		i++;
 	}
-	free(nbrAddr);
-	return (count);
+	p[i] = '\0';
+	return (p);
 }
+
+//#include <stdio.h>
 
 // int	main(void)
 //{
-//	int i = -423;
+//	char	s[] = "42Tokyo";
+//	char	*p;
 
-//	printf("\n%d\n", ft_put_itoa_u(i));
-//	printf("%u\n", i);
-
+//	p = ft_strdup(s);
+//	printf("%s\n", p);
+//	free(p);
+//	return (0);
 //}

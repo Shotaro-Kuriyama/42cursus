@@ -1,39 +1,30 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_put_itoa.c                                      :+:      :+:    :+:   */
+/*   ft_isalpha.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/11/06 10:05:16 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/06 15:57:49 by skuriyam         ###   ########.fr       */
+/*   Created: 2025/10/16 09:41:37 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/10/30 15:50:41 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "ft_printf.h"
-#include <stdio.h>
-#include <stdlib.h>
-
-int	ft_put_itoa(int n)
+int	ft_isalpha(int c)
 {
-	int		count;
-	char	*nbrAddr;
-
-	count = 0;
-	nbrAddr = ft_itoa(n);
-	count = ft_putstr(nbrAddr);
-	if (count < 0)
-	{
-		free(nbrAddr);
-		return (-1);
-	}
-	return (count);
+	if ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))
+		return (1);
+	return (0);
 }
+
+//#include <ctype.h>
+//#include <stdio.h>
 
 // int	main(void)
 //{
-//	int i = -87965407;
+//	char	c;
 
-//	printf("\n%d\n", ft_put_itoa(i));
-
+//	c = '1';
+//	printf("%d\n", isalpha((int)c));
+//	printf("%d\n", ft_isalpha((int)c));
 //}
