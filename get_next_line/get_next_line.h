@@ -5,8 +5,12 @@
 #include <fcntl.h>
 #include <stdio.h>
 
+#ifndef BUFFER_SIZE
+#  define BUFFER_SIZE 3
+#endif
 
-# define BUFFER_SIZE 100000
+
+char	*get_next_line(int fd);
 
 //typedef struct s_gnl
 //{
