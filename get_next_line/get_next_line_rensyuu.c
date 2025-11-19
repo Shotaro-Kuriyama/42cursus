@@ -1,8 +1,6 @@
 
 #include "get_next_line.h"
 
-
-
 size_t	ft_strlen(char *s)
 {
 	size_t	i;
@@ -31,6 +29,9 @@ size_t ft_newline_strlen(char *s)
 
 int ft_has_newline(char *s)
 {
+
+	if (!s)
+		return (0);
 	while(*s)
 	{
 		if (*s == '\n')
@@ -40,28 +41,6 @@ int ft_has_newline(char *s)
 	return (0);
 }
 
-char *newline_malloc(char *stash)
-{
-	char *line;
-	size_t i;
-	size_t newline_len;
-	newline_len = ft_newline_strlen(stash);
-
-	line = (char *)malloc(sizeof(*line) * (newline_len + 1));
-	if (!line)
-		return (NULL);
-	i = 0;
-
-	while(i < newline_len)
-	{
-		line[i] = stash[i];
-		i++;
-	}
-
-	line[i] = '\0';
-
-	return (line);
-}
 
 char *gnl_strjoin(char *s1, char *s2)
 {
@@ -70,6 +49,7 @@ char *gnl_strjoin(char *s1, char *s2)
 	char *res;
 	size_t i;
 	size_t j;
+
 
 	len1 = ft_strlen(s1);
 	len2 = ft_strlen(s2);
@@ -83,7 +63,11 @@ char *gnl_strjoin(char *s1, char *s2)
 
 	i = 0;
 	while (i < len1)
-		res[i++] = s1[i++];
+	{
+		res[i] = s1[i];
+		i++;
+	}
+		
 	j = 0;
 	while (j < len2)
 		res[i++] = s2[j++];
@@ -99,8 +83,9 @@ char *gnl_get_line(char *stash)
 	size_t newline_len;
 	char *newline;
 
+	if (!stash)
+		return (NULL);
 	newline_len = ft_newline_strlen(stash);
-
 	newline = (char *)malloc(sizeof(*newline) * (newline_len + 1));
 	if (!newline)
 		return (NULL);
@@ -116,20 +101,49 @@ char *gnl_get_line(char *stash)
 	return (newline);
 }
 
+char *gnl_get_rest(char *stash)
+{
+	size_t bufsize;
+	size_t newlen;
+	char *newline;
+	size_t i;
+
+	if (!stash)
+		return (NULL);
+	bufsize = ft_strlen(stash);
+	newlen = ft_newline_strlen(stash);
+
+	newline = (char *)malloc(sizeof(*newline) * ((bufsize - newlen) + 1));
+	if (!newline)
+		return (NULL);
+
+	i = 0;
+	while (i < (bufsize - newlen))
+	{
+		newline[i] = stash[newlen + i];
+		i++;
+	}
+	newline[i] = '\0';
+	free(stash);
+	return (newline);
+
+}
+
 char *get_next_line(int fd)
 {
 	ssize_t n;
 	char *buf;
 	static char *stash;
-	size_t i;
 	char *line;
+
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
 
 	buf = (char *)malloc(sizeof(*buf) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
 
 	n = 1;
-
 	while (!ft_has_newline(stash) && n > 0)
 	{
 		n = read(fd, buf, BUFFER_SIZE); //readでbuf配列にコピー
@@ -141,36 +155,28 @@ char *get_next_line(int fd)
 			stash = NULL;
 			return (NULL);
 		}
+		if (n == 0)
+			break;
 		buf[n] = '\0'; //bufを文字列として成立させるためにここですぐにヌル終端
-
 		stash = gnl_strjoin(stash, buf);
 		if (!stash)
 		{
 			free(buf);
 			return (NULL);
 		}
-
-		line = gnl_get_line(stash);
-
-		stash = gnl_get_rest(stash);
 	}
-	if (n <= 0) //エラーまたはEOFより、bufはfreeしてリターンでいい。
+	free(buf);
+
+	if (!stash)
 	{
-		free(buf);
+		if (stash)
+			free(stash);
+		stash = NULL;
 		return (NULL);
 	}
-	buf[n] = '\0';
-
-	i = 0;
-	if (ft_has_newline(buf))
-	{
-		line = newline_malloc(buf);
-		free(buf);
-		return (line);
-	}
-
-	return (buf);
-
+	line = gnl_get_line(stash);
+	stash = gnl_get_rest(stash);
+	return (line);
 }
 
 

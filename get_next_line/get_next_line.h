@@ -6,7 +6,7 @@
 #include <stdio.h>
 
 
-# define BUFFER_SIZE 3
+# define BUFFER_SIZE 100000
 
 //typedef struct s_gnl
 //{
