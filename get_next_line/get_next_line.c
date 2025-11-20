@@ -1,118 +1,48 @@
 
 #include "get_next_line.h"
 
-size_t	ft_strlen(char *s)
-{
-	size_t	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-size_t	ft_newline_strlen(char *s)
-{
-	size_t	i;
-
-	i = 0;
-	while (s[i])
-	{
-		if (s[i] == '\n')
-			return (++i);
-		i++;
-	}
-	return (i);
-}
-
-int	ft_has_newline(char *s)
-{
-	if (!s)
-		return (0);
-	while (*s)
-	{
-		if (*s == '\n')
-			return (1);
-		s++;
-	}
-	return (0);
-}
-
-char	*gnl_strjoin(char *s1, char *s2)
-{
-	size_t	len1;
-	size_t	len2;
-	char	*res;
-	size_t	i;
-	size_t	j;
-
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
-	res = (char *)malloc(sizeof(*res) * (len1 + len2 + 1));
-	if (!res)
-		return (free(s1), NULL);
-	i = 0;
-	while (i < len1)
-	{
-		res[i] = s1[i];
-		i++;
-	}
-	j = 0;
-	while (j < len2)
-		res[i++] = s2[j++];
-	res[i] = '\0';
-	if (s1)
-		free(s1);
-	return (res);
-}
-
 char	*gnl_get_line(char *stash)
 {
 	size_t	i;
-	size_t	newline_len;
-	char	*newline;
+	size_t	len;
+	char	*line;
 
-	if (!stash)
+	if (!stash || !*stash)
 		return (NULL);
-	newline_len = ft_newline_strlen(stash);
-	newline = (char *)malloc(sizeof(*newline) * (newline_len + 1));
-	if (!newline)
+	len = ft_newline_strlen(stash);
+	line = (char *)malloc(sizeof(*line) * (len + 1));
+	if (!line)
 		return (NULL);
 	i = 0;
-	while (i < newline_len)
+	while (i < len)
 	{
-		newline[i] = stash[i];
+		line[i] = stash[i];
 		i++;
 	}
-	newline[i] = '\0';
-	return (newline);
+	line[i] = '\0';
+	return (line);
 }
 
 char	*gnl_get_rest(char *stash)
 {
-	size_t	bufsize;
-	size_t	newlen;
+	size_t	total;
+	size_t	len;
 	char	*rest;
 	size_t	i;
 
 	if (!stash)
 		return (NULL);
-	bufsize = ft_strlen(stash);
-	newlen = ft_newline_strlen(stash);
-	if (newlen >= bufsize)
-	{
-		free(stash);
-		return (NULL);
-	}
-	rest = (char *)malloc(sizeof(*rest) * ((bufsize - newlen) + 1));
+	total = ft_strlen(stash);
+	len = ft_newline_strlen(stash);
+	if (len >= total)
+		return (free(stash), NULL);
+	rest = (char *)malloc(sizeof(*rest) * ((total - len) + 1));
 	if (!rest)
 		return (NULL);
 	i = 0;
-	while (i < (bufsize - newlen))
+	while (i < (total - len))
 	{
-		rest[i] = stash[newlen + i];
+		rest[i] = stash[len + i];
 		i++;
 	}
 	rest[i] = '\0';

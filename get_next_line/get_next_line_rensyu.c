@@ -24,91 +24,98 @@
 
 
 
-
-size_t find_newline_index(const char *buf)
+char	*gnl_get_line(char *stash)
 {
-	size_t i;
+	size_t	i;
+	size_t	len;
+	char	*line;
 
-	i = 0;
-	while (buf[i])
-	{
-		if (buf[i] == '\n')
-			return i;
-		i++;
-	}
-	return (0);
-}
-
-char *extract_line_from_buf(char *buf, ssize_t n)
-{
-	size_t idx;
-	size_t len;
-	char *line;
-	size_t i;
-	
-	idx = find_newline_index(buf);
-	if (idx == 0)
-		len = (size_t)n; //改行がない場合：全部を１行とみなす。
-	else
-		len = idx + 1;
-		
-	line = malloc(len + 1);
+	if (!stash || !*stash)
+		return (NULL);
+	len = ft_newline_strlen(stash);
+	line = (char *)malloc(sizeof(*line) * (len + 1));
 	if (!line)
 		return (NULL);
-
 	i = 0;
 	while (i < len)
 	{
-		line[i] = buf[i];
+		line[i] = stash[i];
 		i++;
 	}
 	line[i] = '\0';
-
 	return (line);
+}
+
+char	*gnl_get_rest(char *stash)
+{
+	size_t	total;
+	size_t	len;
+	char	*rest;
+	size_t	i;
+
+	if (!stash)
+		return (NULL);
+	total = ft_strlen(stash);
+	len = ft_newline_strlen(stash);
+	if (len >= total)
+		return (free(stash), NULL);
+	rest = (char *)malloc(sizeof(*rest) * ((total - len) + 1));
+	if (!rest)
+		return (NULL);
+	i = 0;
+	while (i < (total - len))
+	{
+		rest[i] = stash[len + i];
+		i++;
+	}
+	rest[i] = '\0';
+	free(stash);
+	return (rest);
 }
 
 char	*get_next_line(int fd)
 {
-	ssize_t	n;
-	char	*buf;
-	char *line;
-	static char *stash;
+	ssize_t		n;
+	char		*buf;
+	static char	*stash;
+	char		*line;
 
-	buf = (char *)malloc(sizeof(*buf) * (BUFFER_SIZE));
+	if (fd < 0 || BUFFER_SIZE <= 0)
+		return (NULL);
+	buf = (char *)malloc(sizeof(*buf) * (BUFFER_SIZE + 1));
 	if (!buf)
 		return (NULL);
-	n = read(fd, buf, BUFFER_SIZE); //そのmallocした配列の先頭を筆頭にファイルの文字を格納している。
-	if (n <= 0)
+	n = 1;
+	while (!ft_has_newline(stash) && n > 0)
 	{
-		// エラーまたはEOF
-		free(buf);
+		n = read(fd, buf, BUFFER_SIZE); // readでbuf配列にコピー
+		if (n < 0)
+		{
+			free(buf);
+			if (stash)
+				free(stash);
+			stash = NULL;
+			return (NULL);
+		}
+		if (n == 0)
+			break ;
+		buf[n] = '\0'; // bufを文字列として成立させるためにここですぐにヌル終端
+		stash = gnl_strjoin(stash, buf);
+		if (!stash)
+		{
+			free(buf);
+			return (NULL);
+		}
+	}
+	free(buf);
+	if (!stash)
+	{
+		stash = NULL;
 		return (NULL);
 	}
-
-	buf[n] = '\0';
-
-	line = extract_line_from_buf(buf, n);
+	line = gnl_get_line(stash);
+	stash = gnl_get_rest(stash);
 	return (line);
-}
-
-#include <stdio.h>
-
-int	main(void)
-{
-	int		fd;
-	int		c;
-	char	*p;
-
-	fd = open("test.txt", O_RDONLY); //読み取り専用
-
-	while((p = get_next_line(fd)) != NULL)
-	{
-		printf ("%s", p);
-		free(p);
-	}
-	close(fd);
-
-	
 }
 
 // int getchar(void)
