@@ -3,7 +3,6 @@
 #include <unistd.h> 
 #include <stdlib.h>
 #include <fcntl.h>
-#include <stdio.h>
 
 #ifndef BUFFER_SIZE
 #  define BUFFER_SIZE 42
@@ -15,14 +14,6 @@ typedef struct s_gnl
     char *buf;
     ssize_t n;
 }   t_gnl;
-
-/* bonus用：fdごとのstashを持つ線形リスト */
-typedef struct s_gnl_list
-{
-    int     fd;
-    char    *stash;
-    struct s_gnl_list *next;
-}   t_gnl_list;
 
 char	*get_next_line(int fd);
 
