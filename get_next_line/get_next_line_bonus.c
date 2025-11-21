@@ -6,13 +6,12 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:42:02 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/21 15:48:48 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:55:08 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-/* stash も buf も free して stash を NULL にしてから NULL */
 static char	*free_all(char **stash, t_gnl *g)
 {
 	if (*stash)
@@ -24,7 +23,6 @@ static char	*free_all(char **stash, t_gnl *g)
 	return (NULL);
 }
 
-/* fd に対応するノードを探す。なければ新しく作る。*/
 static t_gnl_list	*get_node(t_gnl_list **list, int fd)
 {
 	t_gnl_list	*cur;
@@ -47,7 +45,6 @@ static t_gnl_list	*get_node(t_gnl_list **list, int fd)
 	return (new_node);
 }
 
-/* fd のノードをリストから削除して free */
 static void	remove_node(t_gnl_list **list, int fd)
 {
 	t_gnl_list	*cur;
@@ -73,9 +70,6 @@ static void	remove_node(t_gnl_list **list, int fd)
 	}
 }
 
-/*
- * その fd 用の node->stash に対して mandatory と同じ読み込み処理。
- */
 static char	*read_and_stash_bonus(int fd, t_gnl_list *node)
 {
 	t_gnl	g;
@@ -107,10 +101,10 @@ static char	*read_and_stash_bonus(int fd, t_gnl_list *node)
 
 char	*get_next_line(int fd)
 {
-	t_gnl_list	*node;
-	char		*line;
+	t_gnl_list			*node;
+	char				*line;
+	static t_gnl_list	*list = NULL;
 
-	static t_gnl_list *list = NULL; //「全 fd 分のノードがつながっているリストの先頭ポインタ」だと思えばOK。
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	node = get_node(&list, fd);
@@ -133,9 +127,9 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-#include <stdio.h>
+//#include <stdio.h>
 
-//int	main(void)
+// int	main(void)
 //{
 //	int fd1 = open("test.txt", O_RDONLY);
 //	int fd2 = open("test2.txt", O_RDONLY);

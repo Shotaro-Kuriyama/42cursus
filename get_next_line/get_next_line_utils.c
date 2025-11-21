@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:41:53 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/20 16:26:04 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/21 16:14:49 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,32 +14,33 @@
 #include <stdlib.h>
 #include <unistd.h>
 
-size_t	ft_strlen(const char *s)
+#define STRLEN_NORMAL 0
+#define STRLEN_NEWLINE 1
+
+size_t	ft_strlen_mode(const char *s, int mode)
 {
 	size_t	i;
 
 	if (!s)
 		return (0);
 	i = 0;
-	while (s[i])
-		i++;
-	return (i);
-}
-
-size_t	ft_newline_strlen(const char *s)
-{
-	size_t	i;
-
-	if (!s)
-		return (0);
-	i = 0;
-	while (s[i])
+	if (mode == STRLEN_NORMAL)
 	{
-		if (s[i] == '\n')
-			return (++i);
-		i++;
+		while (s[i])
+			i++;
+		return (i);
 	}
-	return (i);
+	else if (mode == STRLEN_NEWLINE)
+	{
+		while (s[i])
+		{
+			if (s[i] == '\n')
+				return (++i);
+			i++;
+		}
+		return (i);
+	}
+	return (0);
 }
 
 int	ft_has_newline(const char *s)
@@ -63,8 +64,8 @@ char	*gnl_strjoin(char *s1, char *s2)
 	size_t	i;
 	size_t	j;
 
-	len1 = ft_strlen(s1);
-	len2 = ft_strlen(s2);
+	len1 = ft_strlen_mode(s1, STRLEN_NORMAL);
+	len2 = ft_strlen_mode(s2, STRLEN_NORMAL);
 	res = (char *)malloc(sizeof(*res) * (len1 + len2 + 1));
 	if (!res)
 		return (free(s1), NULL);
@@ -90,7 +91,7 @@ char	*gnl_get_line(char *stash)
 
 	if (!stash || !*stash)
 		return (NULL);
-	len = ft_newline_strlen(stash);
+	len = ft_strlen_mode(stash, STRLEN_NEWLINE);
 	line = (char *)malloc(sizeof(*line) * (len + 1));
 	if (!line)
 		return (NULL);
@@ -113,8 +114,8 @@ char	*gnl_get_rest(char *stash)
 
 	if (!stash)
 		return (NULL);
-	total = ft_strlen(stash);
-	len = ft_newline_strlen(stash);
+	total = ft_strlen_mode(stash, STRLEN_NORMAL);
+	len = ft_strlen_mode(stash, STRLEN_NEWLINE);
 	if (len >= total)
 		return (free(stash), NULL);
 	rest = (char *)malloc(sizeof(*rest) * ((total - len) + 1));

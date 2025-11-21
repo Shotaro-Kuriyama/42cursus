@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:46:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/21 15:47:34 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/21 17:54:03 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,6 @@
 #  define BUFFER_SIZE 42
 # endif
 
-/* 読み込み用の一時変数をまとめる構造体*/
 typedef struct s_gnl
 {
 	char	*buf;
@@ -30,7 +29,6 @@ typedef struct s_gnl
 
 char		*get_next_line(int fd);
 
-/* utils */
 size_t		ft_strlen(const char *s);
 size_t		ft_newline_len(const char *s);
 int			ft_has_newline(const char *s);
