@@ -6,18 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:42:02 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/20 20:32:15 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:48:48 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
-
-/* buf だけ free して NULL */
-static char	*free_buf_only(t_gnl *g)
-{
-	free(g->buf);
-	return (NULL);
-}
 
 /* stash も buf も free して stash を NULL にしてから NULL */
 static char	*free_all(char **stash, t_gnl *g)
@@ -101,27 +94,23 @@ static char	*read_and_stash_bonus(int fd, t_gnl_list *node)
 		g.buf[g.n] = '\0';
 		node->stash = gnl_strjoin(node->stash, g.buf);
 		if (!node->stash)
-			return (free_buf_only(&g));
+			return (free(g.buf), NULL);
 	}
 	free(g.buf);
 	if (!node->stash || !*(node->stash))
 	{
-		if (node->stash)
-		{
-			free(node->stash);
-			node->stash = NULL;
-		}
-		return (NULL);
+		free(node->stash);
+		return (node->stash = NULL, NULL);
 	}
 	return (node->stash);
 }
 
 char	*get_next_line(int fd)
 {
-	static t_gnl_list	*list = NULL; //「全 fd 分のノードがつながっているリストの先頭ポインタ」だと思えばOK。
-	t_gnl_list			*node;
-	char				*line;
+	t_gnl_list	*node;
+	char		*line;
 
+	static t_gnl_list *list = NULL; //「全 fd 分のノードがつながっているリストの先頭ポインタ」だと思えばOK。
 	if (fd < 0 || BUFFER_SIZE <= 0)
 		return (NULL);
 	node = get_node(&list, fd);
@@ -143,3 +132,19 @@ char	*get_next_line(int fd)
 		remove_node(&list, fd);
 	return (line);
 }
+
+#include <stdio.h>
+
+//int	main(void)
+//{
+//	int fd1 = open("test.txt", O_RDONLY);
+//	int fd2 = open("test2.txt", O_RDONLY);
+//	int fd3 = open("test3.txt", O_RDONLY);
+
+//	printf("%s", get_next_line(fd1)); // a.txt の1行目
+//	printf("%s", get_next_line(fd2)); // b.txt の1行目
+//	printf("%s", get_next_line(fd3)); // b.txt の1行目
+//	printf("%s", get_next_line(fd1)); // a.txt の2行目
+//	printf("%s", get_next_line(fd2)); // b.txt の2行目
+//	printf("%s", get_next_line(fd3)); // b.txt の1行目
+//}

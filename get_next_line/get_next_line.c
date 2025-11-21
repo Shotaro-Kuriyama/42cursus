@@ -6,84 +6,9 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:41:59 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/20 20:21:14 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/21 15:46:35 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
-//#include "get_next_line.h"
-
-// static char	*free_buf_only(t_gnl *g)
-//{
-//	free(g->buf);
-//	return (NULL);
-//}
-
-// static char	*free_all(char **stash, t_gnl *g)
-//{
-//	if (*stash)
-//	{
-//		free(*stash);
-//		*stash = NULL;
-//	}
-//	free(g->buf);
-//	return (NULL);
-//}
-
-// static char	*read_and_stash(int fd, char **stash)
-//{
-//	t_gnl	g;
-
-//	g.buf = (char *)malloc(sizeof(g.buf) * (BUFFER_SIZE + 1));
-//	if (!g.buf)
-//		return (NULL);
-//	g.n = 1;
-//	while (!ft_has_newline(*stash) && g.n > 0)
-//	{
-//		g.n = read(fd, g.buf, BUFFER_SIZE);
-//		if (g.n < 0)
-//			return (free_all(stash, &g));
-//		if (g.n == 0)
-//			break ;
-//		g.buf[g.n] = '\0';
-//		*stash = gnl_strjoin(*stash, g.buf);
-//		if (!*stash)
-//			return (free_buf_only(&g));
-//	}
-//	free(g.buf);
-//	if (!*stash || !**stash)
-//	{
-//		if (*stash)
-//		{
-//			free(*stash);
-//			*stash = NULL;
-//		}
-//		return (NULL);
-//	}
-//	return (*stash);
-//}
-
-// char	*get_next_line(int fd)
-//{
-//	static char	*stash;
-//	char		*line;
-
-//	if (fd < 0 || BUFFER_SIZE <= 0)
-//		return (NULL);
-//	if (!read_and_stash(fd, &stash))
-//		return (NULL);
-//	line = gnl_get_line(stash);
-//	if (!line)
-//	{
-//		if (stash)
-//		{
-//			free(stash);
-//			stash = NULL;
-//		}
-//		return (NULL);
-//	}
-//	stash = gnl_get_rest(stash);
-//	return (line);
-//}
 
 #include "get_next_line.h"
 

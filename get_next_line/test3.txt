@@ -1,0 +1,2 @@
+42Toyko
+get_next_line
