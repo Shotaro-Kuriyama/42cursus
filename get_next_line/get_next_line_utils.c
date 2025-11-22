@@ -6,16 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:41:53 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/21 16:14:49 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:38:04 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <fcntl.h>
-#include <stdlib.h>
-#include <unistd.h>
-
-#define STRLEN_NORMAL 0
-#define STRLEN_NEWLINE 1
+#include "get_next_line.h"
 
 size_t	ft_strlen_mode(const char *s, int mode)
 {

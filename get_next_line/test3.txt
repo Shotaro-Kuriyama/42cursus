@@ -1,2 +1,5 @@
-42Toyko
-get_next_line
+file3: 新宿 (line1)
+file3: 渋谷 (line2)
+file3: 東京 (line3)
+file3: 横浜 (line4)
+file3: 池袋 (line5)

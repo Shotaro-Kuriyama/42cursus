@@ -1,0 +1,4 @@
+hello, 42tokyo 1
+42 get_next_line 2
+
+last line (end)

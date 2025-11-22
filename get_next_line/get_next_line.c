@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:41:59 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/21 17:54:46 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/22 15:55:26 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,19 +73,25 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
+//#include <fcntl.h>
 //#include <stdio.h>
 
-//int	main(void)
+// int	main(void)
 //{
-//	int fd;
-//	char *p;
+//	int		fd;
+//	char	*line;
 
-//	fd = open("test.txt", O_RDONLY);
-
-//	while ((p = get_next_line(fd)) != NULL)
+//	fd = open("mandatory_test.txt", O_RDONLY);
+//	if (fd == -1)
 //	{
-//		printf("%s", p);
-//		free(p);
+//		perror("open");
+//		return (1);
+//	}
+//	while ((line = get_next_line(fd)) != NULL)
+//	{
+//		printf("%s", line);
+//		free(line);
 //	}
 //	close(fd);
+//	return (0);
 //}

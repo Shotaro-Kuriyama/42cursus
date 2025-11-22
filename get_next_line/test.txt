@@ -1,6 +1,3 @@
-a
-bbbbbbb
-cccc
-dddd
-42kyoto    aefasf dawd
-ff
+file1: 42Tokyo (line1)
+file1: TokyoSkytree (line2)
+file1: Shinjuku (line3)
