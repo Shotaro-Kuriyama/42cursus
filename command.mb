@@ -1,0 +1,16 @@
+
+
+
+ディレクトリコピーコマンド
+cd /home/skuriyam
+
+cp -r 42cursus_git/get_next_line 42cursus/　
+
+
+完全に消したい場合
+
+そのディレクトリごと 中身も全部いらない なら、
+rm -r（再帰的に削除）を使います。
+
+何も聞かれず一気に消していいなら：
+rm -rf intra-uuid-647eb160-5972-4c73-8a96-13162d460c35-7068024-skuriyam

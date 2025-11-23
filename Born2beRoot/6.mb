@@ -1,0 +1,97 @@
+3:52
+
+これは「パーティション #5 を丸ごと“暗号化用の入れ物”にしますよ」という設定画面です。
+1 行ずつ、初心者向けにかみ砕きますね。
+
+上の説明
+
+You are editing partition #5 of SCSI3 (0,0,0) (sda).
+
+仮想ディスク sda の 5 番目のパーティション（/boot 以外の大きい方）をいじっています。
+
+No existing file system was detected…
+
+まだ中にはファイルシステムがなく、まっさらな状態です。
+
+Partition settings の中身
+Use as: physical volume for encryption
+
+ここが一番大事です。
+
+意味：
+
+「このパーティションの上に、暗号化された大きな箱を作ります」
+
+なので、この中に直接 ext4 を作るのではなく
+「暗号化 → その中に LVM / root / swap を作る」 という二段構えになります。
+
+Encryption method: Device-mapper (dm-crypt)
+
+Linux 標準の暗号化機能の名前です。
+
+これでパーティションの中身が鍵なしでは読めないランダムなデータになります。
+
+Encryption: aes
+
+使う暗号の種類。
+AES は現在ふつうに使われている強い暗号方式です。
+
+Mount point: none
+
+この「生の暗号化パーティション」自体はどこにもマウントしません。
+
+このあと作られる
+/dev/mapper/xxxx（復号された“中身側”のデバイス）に対して
+root(/) や LVM を設定します。
+
+Key size: 256
+
+鍵の長さ。AES-256 なので十分強力、デフォルトのままでOKです。
+
+IV algorithm: xts-plain64（途中で切れてますがたぶんこれ）
+
+暗号の細かい動かし方のモード。ここも デフォルトでOK と覚えておけば十分です。
+
+Encryption key: passphrase
+
+暗号を解く鍵を パスフレーズ（起動時に打つパスワード） で管理する、という意味です。
+
+このあと「暗号用のパスフレーズを入力してください」と聞かれます。
+
+Erase data: yes
+
+暗号化前に、このパーティションの中身をランダムデータで一度全部上書きする設定です。
+
+セキュリティ的には良いことですが、少し時間がかかることがあります。
+
+仮想マシンで中身は何も入っていないので、yes のままで問題なし。
+
+Bootable flag: off
+
+このパーティション自体から直接起動はしないので off でOK です。
+
+起動は /boot パーティション側 + GRUB が担当します。
+
+一番下のメニュー
+
+Erase data on this partition
+→ さっきの「Erase data: yes/no」を変えるサブメニュー
+
+Delete the partition
+→ この暗号化用パーティションを丸ごと削除する
+
+Done setting up the partition
+→ 「この #5 の暗号化設定はこれで確定でOKです」として一覧画面に戻る
+
+Born2beRoot の「暗号化 LVM」構成で進めているなら、
+ここは何もいじらずに Done setting up the partition を選んで Enter で大丈夫です 👍
+
+このあと、
+
+「Configure encrypted volumes」の画面で
+いま設定した sda5 を選んで暗号化ボリュームを作成
+
+その暗号化ボリュームの“中身側”に対して
+「LVM → Volume Group → root と swap の Logical Volume」を作る
+
+という流れになります。

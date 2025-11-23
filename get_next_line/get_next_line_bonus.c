@@ -6,23 +6,23 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:42:02 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/22 15:55:14 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/23 11:13:20 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line_bonus.h"
 
-static char	*free_all(char **stash, t_gnl *g)
+static char	*free_all(char **stash, t_gnl *reader)
 {
 	if (*stash)
 	{
 		free(*stash);
 		*stash = NULL;
 	}
-	if (g && g->buf)
+	if (reader && reader->buf)
 	{
-		free(g->buf);
-		g->buf = NULL;
+		free(reader->buf);
+		reader->buf = NULL;
 	}
 	return (NULL);
 }
@@ -76,25 +76,25 @@ static void	remove_node(t_gnl_list **list, int fd)
 
 static char	*read_and_stash_bonus(int fd, t_gnl_list *node)
 {
-	t_gnl	g;
+	t_gnl	reader;
 
-	g.buf = (char *)malloc(BUFFER_SIZE + 1);
-	if (!g.buf)
+	reader.buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (!reader.buf)
 		return (NULL);
-	g.n = 1;
-	while (!ft_has_newline(node->stash) && g.n > 0)
+	reader.bytes_read = 1;
+	while (!ft_has_newline(node->stash) && reader.bytes_read > 0)
 	{
-		g.n = read(fd, g.buf, BUFFER_SIZE);
-		if (g.n < 0)
-			return (free_all(&(node->stash), &g));
-		if (g.n == 0)
+		reader.bytes_read = read(fd, reader.buf, BUFFER_SIZE);
+		if (reader.bytes_read < 0)
+			return (free_all(&(node->stash), &reader));
+		if (reader.bytes_read == 0)
 			break ;
-		g.buf[g.n] = '\0';
-		node->stash = gnl_strjoin(node->stash, g.buf);
+		reader.buf[reader.bytes_read] = '\0';
+		node->stash = gnl_strjoin(node->stash, reader.buf);
 		if (!node->stash)
-			return (free(g.buf), NULL);
+			return (free(reader.buf), NULL);
 	}
-	free(g.buf);
+	free(reader.buf);
 	if (!node->stash || !*(node->stash))
 	{
 		free(node->stash);
@@ -131,35 +131,54 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-//#include <fcntl.h>
-//#include <stdio.h>
+#include <fcntl.h>
+#include <stdio.h>
 
-// int	main(void)
-//{
-//	int fd1 = open("test.txt", O_RDONLY);
-//	int fd2 = open("test2.txt", O_RDONLY);
-//	int fd3 = open("test3.txt", O_RDONLY);
+int	main(void)
+{
+	int fd1 = open("test.txt", O_RDONLY);
+	int fd2 = open("test2.txt", O_RDONLY);
+	int fd3 = open("test3.txt", O_RDONLY);
 
-//	if (fd1 == -1 || fd2 == -1 || fd3 == -1)
-//	{
-//		perror("open");
-//		return (1);
-//	}
+	if (fd1 == -1 || fd2 == -1 || fd3 == -1)
+	{
+		perror("open");
+		return (1);
+	}
 
-//	printf("%s", get_next_line(fd1)); // test.txt の1行目
-//	printf("%s", get_next_line(fd2)); // test2.txt の1行目
-//	printf("%s", get_next_line(fd3)); // test3.txt の1行目
+	char *line;
+	char *fd3_line;
+	while ((fd3_line = get_next_line(fd3)) != NULL)
+	{
+		if ((line = get_next_line(fd1)) != NULL)
+		{
+			printf("%s", line);
+			free(line);
+		}
+		if ((line = get_next_line(fd2)) != NULL)
+		{
+			printf("%s", line);
+			free(line);
+		}
+		printf("%s", fd3_line);
+		free(fd3_line);
+	}
 
-//	printf("%s", get_next_line(fd1)); // test.txt の2行目
-//	printf("%s", get_next_line(fd2)); // test2.txt の2行目
-//	printf("%s", get_next_line(fd3)); // test3.txt の2行目
+	//	printf("%s", get_next_line(fd1)); // test.txt の1行目
+	//	printf("%s", get_next_line(fd2)); // test2.txt の1行目
+	//	printf("%s", get_next_line(fd3)); // test3.txt の1行目
 
-//	printf("%s", get_next_line(fd1)); // test.txt の3行目
-//	printf("%s", get_next_line(fd2)); // test2.txt の3行目
-//	printf("%s", get_next_line(fd3)); // test3.txt の3行目
+	//	printf("%s", get_next_line(fd1)); // test.txt の2行目
+	//	printf("%s", get_next_line(fd2)); // test2.txt の2行目
+	//	printf("%s", get_next_line(fd3)); // test3.txt の2行目
 
-//	printf("%s", get_next_line(fd2)); // test2.txt の4行目
-//	printf("%s", get_next_line(fd3)); // test3.txt の4行目
+	//	printf("%s", get_next_line(fd1)); // test.txt の3行目
+	//	printf("%s", get_next_line(fd2)); // test2.txt の3行目
+	//	printf("%s", get_next_line(fd3)); // test3.txt の3行目
 
-//	printf("%s", get_next_line(fd3)); // test3.txt の5行目
-//}
+	//	printf("%s", get_next_line(fd2)); // test2.txt の4行目
+	//	printf("%s", get_next_line(fd3)); // test3.txt の4行目
+
+	//	printf("%s", get_next_line(fd3)); // test3.txt の5行目
+	//
+}

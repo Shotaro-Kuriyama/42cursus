@@ -6,18 +6,18 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:41:59 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/22 15:55:26 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/23 11:04:31 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static int	cleanup(char **stash, t_gnl *g)
+static int	cleanup(char **stash, t_gnl *reader)
 {
-	if (g && g->buf)
+	if (reader && reader->buf)
 	{
-		free(g->buf);
-		g->buf = NULL;
+		free(reader->buf);
+		reader->buf = NULL;
 	}
 	if (stash && *stash)
 	{
@@ -29,26 +29,26 @@ static int	cleanup(char **stash, t_gnl *g)
 
 static int	read_and_stash(int fd, char **stash)
 {
-	t_gnl	g;
+	t_gnl	reader;
 
-	g.buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!g.buf)
-		return (cleanup(stash, &g));
-	g.n = 1;
-	while (!ft_has_newline(*stash) && g.n > 0)
+	reader.buf = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!reader.buf)
+		return (cleanup(stash, &reader));
+	reader.bytes_read = 1;
+	while (!ft_has_newline(*stash) && reader.bytes_read > 0)
 	{
-		g.n = read(fd, g.buf, BUFFER_SIZE);
-		if (g.n < 0)
-			return (cleanup(stash, &g));
-		if (g.n == 0)
+		reader.bytes_read = read(fd, reader.buf, BUFFER_SIZE);
+		if (reader.bytes_read < 0)
+			return (cleanup(stash, &reader));
+		if (reader.bytes_read == 0)
 			break ;
-		g.buf[g.n] = '\0';
-		*stash = gnl_strjoin(*stash, g.buf);
+		reader.buf[reader.bytes_read] = '\0';
+		*stash = gnl_strjoin(*stash, reader.buf);
 		if (!*stash)
-			return (cleanup(stash, &g));
+			return (cleanup(stash, &reader));
 	}
-	free(g.buf);
-	g.buf = NULL;
+	free(reader.buf);
+	reader.buf = NULL;
 	if (!*stash || !**stash)
 		return (cleanup(stash, NULL));
 	return (1);
@@ -73,25 +73,25 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-//#include <fcntl.h>
-//#include <stdio.h>
+#include <fcntl.h>
+#include <stdio.h>
 
-// int	main(void)
-//{
-//	int		fd;
-//	char	*line;
+ int	main(void)
+{
+	int		fd;
+	char	*line;
 
-//	fd = open("mandatory_test.txt", O_RDONLY);
-//	if (fd == -1)
-//	{
-//		perror("open");
-//		return (1);
-//	}
-//	while ((line = get_next_line(fd)) != NULL)
-//	{
-//		printf("%s", line);
-//		free(line);
-//	}
-//	close(fd);
-//	return (0);
-//}
+	fd = open("mandatory_test.txt", O_RDONLY);
+	if (fd == -1)
+	{
+		perror("open");
+		return (1);
+	}
+	while ((line = get_next_line(fd)) != NULL)
+	{
+		printf("%s", line);
+		free(line);
+	}
+	close(fd);
+	return (0);
+}

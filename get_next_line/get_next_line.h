@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/21 15:46:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/22 15:35:50 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/23 11:03:49 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 typedef struct s_gnl
 {
 	char	*buf;
-	ssize_t	n;
+	ssize_t	bytes_read;
 }			t_gnl;
 
 char		*get_next_line(int fd);

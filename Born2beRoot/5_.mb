@@ -1,0 +1,87 @@
+3:42~3:45
+
+これは、
+
+「今まで決めたパーティションの内容を、本当にディスクに反映していいですか？
+ついでに、このあと暗号化の設定（encrypted volumes）を始めますよ」
+
+という最終確認の警告画面です。
+
+スクリーンの内容を上から噛み砕きますね。
+
+1. 一番上の説明
+
+Before encrypted volumes can be configured, the current partitioning scheme has to be written to disk. These changes cannot be undone.
+
+「暗号化ボリューム（encrypted volumes）を設定する前に、
+いま決めたパーティション構成を実際のディスクに書き込む必要があります。
+一度書き込むと元には戻せません」という意味です。
+
+要するに
+→ 「本当にここまでの区切り方で決定していい？」 と聞いています。
+
+After the encrypted volumes have been configured, no additional changes to the partitions … will be allowed.
+
+「暗号化ボリュームを作ったあとは、そのディスクのパーティション構成をもういじれません」という注意。
+
+だから、今の区切り方に納得してから先に進んでね、ということです。
+
+2. どのディスク・どのパーティションが変わるか
+
+The partition tables of the following devices are changed:
+SCSI3 (0,0,0) (sda)
+
+仮想マシンの中のディスク sda（8.6GB の仮想HDD） の
+パーティションテーブル（区切り方の情報）を書き換えます、という意味です。
+
+The following partitions are going to be formatted:
+partition #1 … as ext4
+partition #5 … as ext4
+
+パーティション #1 と #5 を ext4 でフォーマットします、と言っています。
+
+フォーマット＝そのパーティションの中身を全部消して、まっさらの状態にして ext4 のルールで使えるようにすることです。
+
+今は仮想ディスクなので、ここで消えるのはVM の中身だけで、ホストOS（Mac/Windows）の実ディスクは消えません。
+
+3. 最後の質問
+
+Write the changes to disk and configure encrypted volumes?
+<Yes> <No>
+
+「これらの変更をディスクに書き込んで、暗号化ボリュームの設定を続けますか？」
+
+Yes：
+
+今まで決めた /boot パーティション・残りのパーティションの区切り方を
+実際のディスクに反映する
+
+そのあと「暗号化（LUKS）」の設定画面に進む
+
+No：
+
+まだ書き込まない
+
+さっきのパーティション一覧画面に戻って、サイズや種類をやり直せる
+
+Born2beRoot 的にどうするか
+
+もし今の状態が
+
+sda1：約500MB ext4 /boot
+
+sda5：残り全部（暗号化に使う予定の領域）
+
+という 想定どおりの構成 になっているなら、
+→ <Yes> を選んで OK です（このあと暗号化の詳細設定に進みます）。
+
+「あ、/boot のサイズを間違えた」「#5 を ext4 にしちゃってて、暗号化用に変えたい」
+などまだ直したい点があるなら、
+→ ここで <No> を選んで一度一覧に戻り、パーティション設定を修正します。
+
+超ざっくりまとめると：
+
+「この仮想ディスクを、/boot 500MB ＋ 残り全部 の構成で本決定して消していい？
+そのうえで暗号化設定に進めるけどどうする？」
+
+と聞かれている画面です。
