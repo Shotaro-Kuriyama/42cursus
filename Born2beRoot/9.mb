@@ -1,0 +1,167 @@
+5:40
+
+1. 画面のざっくりした意味
+
+この画面は、
+
+「今のディスクの区切り（パーティション）と暗号化の設定はこうなってます。
+ここから、さらに細かい設定をしたり、もう終わりにしてインストールを進めたりできますよ」
+
+という確認画面です。
+
+赤くなっている
+Configure encrypted volumes（暗号化ボリュームを設定）
+の行は、今カーソルがそこにある、というだけです。
+
+2. 画面の英語 → 日本語訳
+上の説明文
+
+This is an overview of your currently configured partitions and mount points.
+Select a partition to modify its settings (file system, mount point, etc.),
+a free space to create partitions, or a device to initialize its partition table.
+
+日本語
+
+「これは、現在設定されているパーティション（区画）とマウントポイント（どこに繋ぐか）の一覧です。
+
+パーティションを選ぶと、その設定（ファイルシステム、マウントポイントなど）を変更できます。
+
+空き領域を選ぶと、新しいパーティションを作れます。
+
+デバイスを選ぶと、そのディスクのパーティション表を初期化できます。」
+
+メニュー部分
+
+Guided partitioning
+→ 「ガイド付きパーティション設定（おまかせで区切る）」
+
+Configure software RAID
+→ 「ソフトウェアRAIDを設定する」
+（※複数のディスクをまとめて使う高級な機能。Born2beRootでは使わない）
+
+Configure the Logical Volume Manager
+→ 「LVM（論理ボリュームマネージャ）を設定する」
+（※ディスクを柔軟に管理する仕組み。今はもう設定済みと思ってOK）
+
+Configure encrypted volumes ← 赤
+→ 「暗号化されたボリューム（領域）を設定する」
+（※さっきパスフレーズを決めた“暗号化ディスク”の詳細設定）
+
+Configure iSCSI volumes
+→ 「iSCSIボリュームを設定する」
+（※ネットワーク越しのディスク。使わない）
+
+真ん中の一覧
+① Encrypted volume の行
+
+Encrypted volume (sda5_crypt) - 8.1 GB Linux device-mapper (crypt)
+ #1 8.1 GB f ext4
+
+日本語＋意味
+
+「暗号化ボリューム（sda5_crypt） – 8.1GB Linux device-mapper（crypt）」
+
+sda5_crypt =
+ディスクの一部を「金庫みたいに暗号化した入れ物」の名前だと思ってください。
+
+中身を見るには、起動時にさっき決めたパスフレーズが必要。
+
+その下の行
+
+#1 8.1 GB f ext4
+→ 「この金庫の中に、ext4という形式で8.1GBの領域が1個ある」
+
+ここに実際のLinux本体（/）が入ります。
+
+イメージ：
+物理ディスク → 暗号化された箱（sda5_crypt） → 中に ext4 の部屋 #1
+
+② SCSI3 (sda) の行
+
+SCSI3 (0,0,0) (sda) - 8.6 GB ATA VBOX HARDDISK
+ #1 primary 499.1 MB F ext4 /boot
+ #5 logical 8.1 GB K crypto (sda5_crypt)
+
+日本語＋意味
+
+1 行目
+
+「SCSI3 (0,0,0) (sda) – 8.6GB ATA VBOX ハードディスク」
+→ 仮想マシンの“物理ディスク”の名前が sda です。
+
+#1 primary 499.1 MB F ext4 /boot
+
+「パーティション1：プライマリ、499MB、ext4、/boot を置く」
+
+/boot = PCを起動するための特別なファイル（カーネルなど）が入る場所
+
+暗号化されていない小さな領域
+
+#5 logical 8.1 GB K crypto (sda5_crypt)
+
+「パーティション5：論理パーティション、8.1GB、暗号化(crypto)、中身は sda5_crypt」
+
+さっきの暗号化ボリュームの“元になっている”パーティションです。
+
+ここ自体は“暗号化された箱”で、中を開くと ext4 の領域が見える、という構造。
+
+primary / logical は、ディスクの古いルールの種類の名前だと思ってOKです。
+Born2beRootでは「1番が/boot、5番が暗号化された本体」と覚えれば十分。
+
+F = フォーマットする予定
+K = 暗号化（crypto）の印、くらいの理解でOKです。
+
+一番下の2つ
+
+Undo changes to partitions
+→ 「パーティションへの変更を取り消す」
+
+Finish partitioning and write changes to disk
+→ 「パーティション設定を終了して、変更をディスクに書き込む」
+
+ここまでの設定で問題なければ、
+Finish partitioning and write changes to disk を選んで進めるのが正解です。
+
+画面最下部のキー説明
+
+<F1> for help; <Tab> moves; <Space> selects; <Enter> activates buttons
+
+F1 … ヘルプを開く
+
+Tab … フォーカスを移動（メニュー → 下のボタンなど）
+
+Space … チェックボックスのオン/オフなど
+
+Enter … 決定（今選んでいる項目を実行）
+
+3. そもそも今どういう構成になっているのか（ざっくり図）
+
+あなたの仮想マシンのディスクは、今こんな感じです：
+
+物理ディスク sda（8.6GB）
+
+#1: 約500MB、ext4、/boot（非暗号化）
+
+#5: 約8.1GB、暗号化(crypto) → 中身が sda5_crypt
+
+暗号化ボリューム sda5_crypt
+
+中に ext4 の領域 #1（8.1GB） → ここがルート(/)になる
+
+Born2beRootでよく指定される「/boot は別パーティション」「残りは暗号化してLVMで使う」という、お手本どおりの構成になっています。
+
+4. 具体的に今どう動けばいいか（手順）
+
+今の画面では、設定自体は問題ないので、
+Tab か矢印で一番下の
+Finish partitioning and write changes to disk を選ぶ。
+
+Enter を押す。
+
+「本当にディスクを消してもいい？（Yes/No）」みたいな確認が出るので、
+内容を確認して Yes を選ぶ。
+
+そのあとインストールが進む。
+
+※これは仮想マシンの中の仮想ディスクだけを消しているので、
+　ホストPC（普段のWindowsやmacOS）のデータは消えません。

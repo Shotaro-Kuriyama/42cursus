@@ -1,0 +1,66 @@
+12:10
+
+これは、
+
+「ほかにインストール用のディスク（ISO）があれば、今スキャンする？」
+
+と聞いている画面です。
+
+1. 英語の日本語訳
+
+Scanning your installation media finds the label:
+Debian GNU/Linux 13.2.0 …
+
+You now have the option of scanning additional media for use by the package manager (apt).
+Normally these should be from the same set as the one you booted from.
+If you do not have any additional media, this step can just be skipped.
+
+If you wish to scan more media, please insert another one now.
+
+Scan extra installation media?
+
+ざっくり訳すと：
+
+「今使っているインストールDVD（ISO）を確認しました。」
+
+「ここで、追加のインストールディスクも一緒に使うかどうかを選べます。
+ふつうは、起動に使ったものと同じシリーズのディスクです。」
+
+「追加のディスクが無いなら、このステップは飛ばして構いません。」
+
+「もし他にもディスクがあるなら、今入れてください。」
+
+「追加のインストールメディアをスキャンしますか？」
+
+下の <Yes> / <No> が「やる／やらない」です。
+
+2. 何のための画面？
+
+installation media
+→ インストール用DVD / USB / ISO イメージのこと
+
+package manager (apt)
+→ ソフトをインストールする仕組み（apt コマンドのこと）
+
+昔は「DVD 1～3枚組」みたいなセットがあって、
+全部のDVDからパッケージを読み込みたいときに
+ここで「Yes」を押して、追加ディスクも読み込ませていました。
+
+でも今はほとんどのパッケージはインターネットから取ってくるので、
+普通は追加メディアなんて持っていません。
+
+3. Born2beRoot の仮想マシンではどうする？
+
+使っているのは 1枚の ISO だけ ですよね
+
+他にDVD/ISOを入れ替える予定もない
+
+→ なので ここは No を選べばOK です。
+
+やること：
+
+<No> が赤く選ばれている状態で
+
+Enter を押す
+
+これでこのステップをスキップして、次（ミラーサーバの設定とか）に進みます。

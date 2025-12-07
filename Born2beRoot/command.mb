@@ -1,0 +1,198 @@
+
+
+
+$ lsblk
+
+何のコマンド？
+
+List Block devices
+→ 「ディスク・パーティション・LVM など“ブロックデバイス”の一覧を表示する」コマンド。
+
+
+$ uname -a
+Linux skuriyam42 6.12.57+deb13-amd64 #1 SMP PREEMPT_DYNAMIC Debian 6.12.57-1 (2025-11-05) x86_64 GNU/Linux
+
+何のコマンド？
+
+unix name
+→ 「システム（カーネル）の情報を表示する」コマンド。
+
+-a オプション
+→ all（全部）
+→ 使える情報を全部表示する。
+
+今回の出力の意味ざっくり
+
+Linux …… OSの種類（Linux カーネル）
+
+skuriyam42 …… ホスト名
+
+6.12.57+deb13-amd64 …… カーネルのバージョン
+
+x86_64 …… 64bit 版
+
+👉 「Debian 13 / 64bit / カーネル6.12.57 で動いている」と確認できた。
+
+
+$ ip a
+
+何のコマンド？
+
+ip コマンドの address サブコマンド（省略形で ip a）
+→ ネットワークインターフェースと IP アドレスを表示する。
+
+今回の主な出力
+
+大事なところだけ抜きます：
+
+1: lo: ...
+    inet 127.0.0.1/8 scope host lo
+
+2: enp0s3: ...
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic ...
+
+lo（loopback）
+→ 自分自身を指す仮想インターフェース
+→ 127.0.0.1 は「自分自身」を意味する特別なIP
+
+enp0s3
+→ VirtualBox が作った仮想のLANポート
+
+inet 10.0.2.15/24
+→ このマシンに割り当てられた IP アドレスが 10.0.2.15
+→ /24 はネットマスク（255.255.255.0）という意味
+
+brd 10.0.2.255 …… ブロードキャストアドレス
+
+dynamic …… DHCP で自動取得したIP
+
+👉 「ネットワークインターフェースがちゃんと UP していて、IP も振られている」ことがわかる。
+
+
+
+ping -c 3 8.8.8.8
+
+$ ping -c 3 8.8.8.8
+PING 8.8.8.8 ... 
+64 bytes from 8.8.8.8: icmp_seq=1 ttl=128 time=... ms
+...
+3 packets transmitted, 3 received, 0% packet loss, time 2003ms
+
+何のコマンド？
+
+ping
+→ 指定したアドレスに「生きてる？」と ICMP という特別なパケットを投げて、返事が来るかを見るコマンド。
+
+-c 3
+→ count 3：3回だけ送ってやめる（オプションを付けないと延々続く）
+
+8.8.8.8
+→ Google Public DNS（インターネット側にいる有名なサーバー）
+
+出力の意味
+
+64 bytes from 8.8.8.8: ... time=2.15 ms
+→ 8.8.8.8 から 64バイトの返事が返ってきた。往復に約2.15ミリ秒かかった。
+
+一番下：
+3 packets transmitted, 3 received, 0% packet loss
+
+→ 3個送って3個ちゃんと戻ってきた（ロス0%）
+
+👉 「インターネット（外の世界）までちゃんと届いてる」ことが確認できた。
+
+
+1, rootになる
+
+su -
+
+意味：
+su = substitute user（ユーザーを入れ替える）
+- を付けると「そのユーザーのログインシェルとして完全になりきる」
+→ ここでは root にログインし直す コマンド。
+
+実行すると Password: と出るので、root のパスワードを入力して Enter。
+
+プロンプトがこんな感じになれば成功：
+
+root@skuriyam42:~#
+
+
+2, パッケージ情報を最新にする
+
+apt update
+
+意味：
+Debian のパッケージ管理システム apt に
+「インターネット上のリポジトリから、最新の“パッケージ一覧”を取ってきて」と頼むコマンド。
+
+実際のソフト本体はまだダウンロードしない。「カタログ更新」みたいなイメージ。
+
+
+3, sudo をインストール
+
+apt install sudo
+
+意味：
+sudo パッケージ（コマンド）をインストールする。
+
+sudo = superuser do
+→ 一時的に管理者権限でコマンドを実行するための仕組み。
+
+途中で
+Do you want to continue? [Y/n] と聞かれたら y を押して Enter。
+
+4, 自分ユーザーを sudo グループに追加
+
+usermod -aG sudo skuriyam
+
+意味：
+
+usermod … user modify（ユーザー設定を変更）
+
+-aG sudo … sudo グループに追加する（append to Groups）
+
+skuriyam … 対象のユーザー名
+
+これで skuriyam が「sudo を使える人」になります。
+
+5, root を抜けて、ログインし直す
+
+exit
+
+意味：
+今いるシェルを終了する。
+su - で入った root シェルから抜けて、元の skuriyam に戻る。
+
+そのあと一度 logout か Ctrl + D でログアウトして、
+ログイン画面に戻ったら また skuriyam でログイン しておくと確実です
+（グループの変更が反映される）。
+
+6, sudo が使えるか確認
+
+sudo whoami
+
+意味：
+
+sudo … この一回だけ管理者として実行
+
+whoami … 今「誰として」動いているかを表示するコマンド
+
+初回は
+[sudo] password for skuriyam:
+
+と出るので、skuriyam のパスワードを入力。
+うまく行けば
+
+root
+
+と表示されます。
+→ 「sudo を使った結果、root として動けている」という意味。
+
+ここまでできれば、
+
+普段は skuriyam@...$ で作業
+
+管理者が必要なところだけ sudo コマンド で実行
+
+という、Born2beRoot っぽい環境の土台ができました。

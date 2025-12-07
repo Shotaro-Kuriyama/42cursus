@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/20 12:42:02 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/23 11:13:20 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/07 19:31:54 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -163,22 +163,22 @@ int	main(void)
 		printf("%s", fd3_line);
 		free(fd3_line);
 	}
+        printf("-------2-------------------------------agjorioajoijoijmo");
+		printf("%s", get_next_line(fd1)); // test.txt の1行目
+		printf("%s", get_next_line(fd2)); // test2.txt の1行目
+		printf("%s", get_next_line(fd3)); // test3.txt の1行目
 
-	//	printf("%s", get_next_line(fd1)); // test.txt の1行目
-	//	printf("%s", get_next_line(fd2)); // test2.txt の1行目
-	//	printf("%s", get_next_line(fd3)); // test3.txt の1行目
+		printf("%s", get_next_line(fd1)); // test.txt の2行目
+		printf("%s", get_next_line(fd2)); // test2.txt の2行目
+		printf("%s", get_next_line(fd3)); // test3.txt の2行目
 
-	//	printf("%s", get_next_line(fd1)); // test.txt の2行目
-	//	printf("%s", get_next_line(fd2)); // test2.txt の2行目
-	//	printf("%s", get_next_line(fd3)); // test3.txt の2行目
+		printf("%s", get_next_line(fd1)); // test.txt の3行目
+		printf("%s", get_next_line(fd2)); // test2.txt の3行目
+		printf("%s", get_next_line(fd3)); // test3.txt の3行目
 
-	//	printf("%s", get_next_line(fd1)); // test.txt の3行目
-	//	printf("%s", get_next_line(fd2)); // test2.txt の3行目
-	//	printf("%s", get_next_line(fd3)); // test3.txt の3行目
+		printf("%s", get_next_line(fd2)); // test2.txt の4行目
+		printf("%s", get_next_line(fd3)); // test3.txt の4行目
 
-	//	printf("%s", get_next_line(fd2)); // test2.txt の4行目
-	//	printf("%s", get_next_line(fd3)); // test3.txt の4行目
-
-	//	printf("%s", get_next_line(fd3)); // test3.txt の5行目
-	//
+		printf("%s", get_next_line(fd3)); // test3.txt の5行目
+	
 }

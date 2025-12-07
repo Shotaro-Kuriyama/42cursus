@@ -1,0 +1,148 @@
+5:47
+
+OK、この画面も日本語訳＋かみ砕き説明していきます。
+
+1. 英文の日本語訳
+
+画面上部：
+
+Summary of current LVM configuration:
+Free Physical Volumes: 0
+Used Physical Volumes: 0
+Volume Groups: 0
+Logical Volumes: 0
+
+日本語
+
+「現在の LVM 設定のまとめ：
+
+空きの物理ボリューム：0
+
+使用中の物理ボリューム：0
+
+ボリュームグループ：0
+
+論理ボリューム：0」
+
+その下：
+
+LVM configuration action:
+ Display configuration details
+ Create volume group
+ Finish
+
+日本語
+
+「LVMの設定で今から何をしますか？」
+
+Display configuration details
+→ 「今の設定の詳細を表示する」（いまは何もないので見ても0だけ）
+
+Create volume group
+→ 「ボリュームグループを作る」
+
+Finish
+→ 「LVMの設定を終わる（この画面を抜ける）」
+
+一番下：
+
+<Go Back>
+→ 「一つ前の画面に戻る」
+
+2. そもそも LVM って何？
+
+めちゃざっくり言うと、
+
+LVM … ディスクの上に「仮想の入れ物」を作って、柔軟に大きさを変えられる仕組み
+
+ディスクを「本棚」とすると：
+
+物理ボリューム（PV）
+→ 本棚そのもの（または一段）
+
+ボリュームグループ（VG）
+→ その本棚をひとまとめにした“倉庫”
+
+論理ボリューム（LV）
+→ 倉庫の中に作る「箱」
+例：root 用の箱、swap 用の箱、home 用の箱…みたいな感じ
+
+3. この画面が言っていること
+
+全部 0 になっているのは、
+
+「まだ LVM 用の入れ物をまったく作っていません」
+
+という意味です。
+
+Free Physical Volumes: 0
+→ 「LVM に使える“本棚（PV）”が 1 個も登録されていない」
+
+なので
+
+Volume Groups も 0
+
+Logical Volumes も 0
+という状態です。
+
+4. いま何をすればいい？
+
+ここは目的次第で変わります。
+
+A. LVM を使わないなら
+
+Born2beRoot の条件を 「暗号化だけでOK、LVMは不要」 な形でやっているなら、
+
+この画面では 何も設定しなくて大丈夫 です。
+
+Finish を選んで Enter → 「戻る」だけでOKです。
+
+（さっきの画面で、sda5_crypt の中を ext4 でフォーマットしていたなら、
+LVMを使わなくても一応インストールはできます）
+
+B. 「暗号化＋LVM」をちゃんと使いたい場合
+
+もし解説サイトや課題が
+「暗号化した上に LVM を作って、その中に root と swap を作れ」
+という指定なら、まだ途中です。
+
+その場合のざっくり流れ：
+
+パーティション設定画面に戻る
+
+暗号化したデバイス（例：sda5_crypt や /dev/mapper/sda5_crypt）を選んで
+「Use as: physical volume for LVM（LVM用物理ボリュームとして使う）」
+に変更する
+
+もう一度「Configure the Logical Volume Manager」を開く
+→ この画面で
+
+Free Physical Volumes: 1
+になっているはず
+
+Create volume group を選んで
+
+VG の名前（例：vg01）を決める
+
+さっきの物理ボリュームを使うように選択する
+
+そのあと出てくるメニューで
+
+Create logical volume を選び
+
+root 用、swap 用などの論理ボリュームを作る
+
+…という感じです。
+
+5. まとめ（この画面の意味だけ）
+
+これは 「LVM の状態は今こうなってます。何をしますか？」 という画面。
+
+今は まだ何も作っていないので全部 0。
+
+LVMを使わないなら → Finish でOK。
+
+LVMを使うなら → まだパーティション側で「LVM用に使う」設定をしていないので、
+いったん戻って設定 → 再度ここに来て VG/LV を作る、
+
+というイメージです。
