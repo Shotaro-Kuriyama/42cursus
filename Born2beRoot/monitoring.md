@@ -96,283 +96,461 @@ nano とは？
 以下は Debianで動く標準コマンド中心の安全構成。
 （エラー非表示のため 2>/dev/null を必要に応じて入れています）
 
+
+
+
+**ここから学習向けshファイルの中身**
+
+/proc や基本コマンドから情報を拾って
+
+自分で集計・計算して
+
+最終表示に整える
+
+という流れが見えるから。
+これは**“監視って何をどう測って、どう要約するのか”**という本質を学べます。
+
+一方で、私が最初に出した版（lscpu, nproc, df --total など多用）は
+“提出事故を減らす”・“短く書く”には強いけど、
+仕組みの理解という意味ではブラックボックスが増えます。
+
+だからあなたの目的
+
+「このmonitoring.shに書いてあることがすべて理解して説明できるようにしたい」
+には、あなたの修正版が最適です。
+
+学習向けの“本質理解版” monitoring.sh（あなたの修正版ベース）
+
+必要最小の“評価事故回避”だけ入れた形に整えます。
+
+
+
 #!/bin/bash
 
-# 1) Architecture + Kernel
+# 1) ARCH
 arch=$(uname -a)
 
-# 2) Physical CPU (ソケット数)
-cpu_physical=$(lscpu | awk '/Socket\(s\)/{print $2}')
+# 2) CPU PHYSICAL (unique physical id)
+cpuf=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
-# 3) vCPU
-vcpu=$(nproc)
+# 3) CPU VIRTUAL (vCPU)
+cpuv=$(grep "processor" /proc/cpuinfo | wc -l)
 
-# 4) Memory Usage
-mem_info=$(free -m | awk '/Mem:/ {printf "%d/%dMB (%.2f%%)", $3, $2, $3/$2*100}')
+# 4) RAM
+ram_total=$(free --mega | awk '$1 == "Mem:" {print $2}')
+ram_use=$(free --mega | awk '$1 == "Mem:" {print $3}')
+ram_percent=$(free --mega | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}')
 
-# 5) Disk Usage (tmpfs等を除外して合計)
-disk_info=$(df -BG --total --exclude-type=tmpfs --exclude-type=devtmpfs \
-  | awk '/total/ {printf "%s/%s (%s)", $3, $2, $5}')
+# 5) DISK
+disk_total=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_t += $2} END {printf ("%.1fGb"), disk_t/1024}')
+disk_use=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_u += $3} END {print disk_u}')
+disk_percent=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_u += $3} {disk_t+= $2} END {printf("%d"), disk_u/disk_t*100}')
 
-# 6) CPU load
-# topの出力から user + system をざっくり使用率として計算
-cpu_load=$(top -bn1 | awk '/Cpu\(s\)/{gsub(",","."); printf "%.1f%%", $2 + $4}')
+# 6) CPU LOAD
+cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
+cpu_op=$(expr 100 - $cpul)
+cpu_fin=$(printf "%.1f" $cpu_op)
 
-# 7) Last boot
-last_boot=$(who -b | awk '{print $3 " " $4}')
+# 7) LAST BOOT
+lb=$(who -b | awk '$1 == "system" {print $3 " " $4}')
 
-# 8) LVM use
-lvm_use=$(lsblk | grep -q "lvm" && echo "yes" || echo "no")
+# 8) LVM USE
+lvmu=$(if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi)
 
-# 9) TCP Connections (ESTABLISHED)
-tcp_conn=$(ss -ta state established | tail -n +2 | wc -l)
+# 9) TCP CONNEXIONS
+tcpc=$(ss -ta | grep ESTAB | wc -l)
 
-# 10) User log
-user_log=$(who | wc -l)
+# 10) USER LOG
+ulog=$(users | wc -w)
 
-# 11) Network (IPv4 + MAC)
-ip_addr=$(hostname -I | awk '{print $1}')
-mac_addr=$(ip link show | awk '/link\/ether/ {print $2; exit}')
+# 11) NETWORK
+ip=$(hostname -I | awk '{print $1}')
+mac=$(ip link show | awk '/link\/ether/ {print $2; exit}')
 
-# 12) Sudo commands count
-sudo_cmd=$(journalctl _COMM=sudo 2>/dev/null | grep -c "COMMAND")
+# 12) SUDO
+cmnd=$(journalctl _COMM=sudo 2>/dev/null | grep COMMAND | wc -l)
 
-msg="#Architecture: $arch
-#CPU physical : $cpu_physical
-#vCPU : $vcpu
-#Memory Usage: $mem_info
-#Disk Usage: $disk_info
-#CPU load: $cpu_load
-#Last boot: $last_boot
-#LVM use: $lvm_use
-#Connections TCP : $tcp_conn ESTABLISHED
-#User log: $user_log
-#Network: IP $ip_addr ($mac_addr)
-#Sudo : $sudo_cmd cmd"
+wall "	Architecture: $arch
+	CPU physical: $cpuf
+	vCPU: $cpuv
+	Memory Usage: $ram_use/${ram_total}MB ($ram_percent%)
+	Disk Usage: $disk_use/${disk_total} ($disk_percent%)
+	CPU load: $cpu_fin%
+	Last boot: $lb
+	LVM use: $lvmu
+	Connections TCP: $tcpc ESTABLISHED
+	User log: $ulog
+	Network: IP $ip ($mac)
+	Sudo: $cmnd cmd"
 
-wall "$msg"
 
-この形式は、課題例の出力スタイルにも近く、要求項目を満たす構造です。
-4) 1行ずつ“意味の骨組み”を理解
 
-シバン
-#!/bin/bash
+このスクリプトの読み方（“暗記しないための地図”）
 
-このファイルはbashで実行してねという宣言。
+monitoring.shは
 
-変数に値を入れる
+情報を集める（コマンド）
+
+必要な形に整える（grep/awk/wc/計算）
+
+表示する（wall）
+
+の3段構造です。
+
+ここから“コマンドとオプションを0から全部解体”
+シェルの基本記号（最重要）
+$(...)
+
+コマンド置換。
+中のコマンド結果を“文字列として”取り込む。
+
+例：
 
 arch=$(uname -a)
 
-uname = OS情報表示
 
--a = できるだけ全部表示
-
-$(...) = コマンドの結果を文字として取り込む
-→ つまり
-OS/カーネル情報を arch という箱に入れる
+= uname -a の出力を arch に入れる。
 
 
-物理CPUとvCPUの違い
+|
 
-物理CPU = 実際のCPUパッケージ（ソケット）数
+パイプ。
+左の出力を右の入力へ流す。
 
-vCPU = OSが見えているCPUの数（VMでは割り当て数）
+例：
 
-cpu_physical=$(lscpu | awk '/Socket\(s\)/{print $2}')
-vcpu=$(nproc)
+grep "physical id" /proc/cpuinfo | sort -u | wc -l
 
-lscpu = CPU詳細
+1) ARCH
+arch=$(uname -a)
 
-Socket(s) の数字を抜く
+uname
 
-nproc = “使えるCPU数”を返す
+OSやカーネル情報を出す。
 
-メモリ
+-a
 
-free -m
+all
+できるだけ全部出す。
 
-free = RAM状況
+→ これで
+OS/カーネル/マシン種別などのまとめ情報が一行で取れる。
 
--m = MB単位
+2) CPU physical
+cpuf=$(grep "physical id" /proc/cpuinfo | sort -u | wc -l)
 
-awk で
-使用中/合計/割合を整形してる。
+ここは“理解の花形”。
+/proc/cpuinfo
 
-ディスク
+カーネルが持つCPU情報の生データ。
 
-df -BG --total --exclude-type=tmpfs --exclude-type=devtmpfs
+grep "physical id"
 
-df = ディスク使用量
+physical id の行だけ抽出。
+これは**“どの物理CPU（ソケット）に属するか”の番号**。
 
--B G = GB単位
+sort -u
 
---total = 合計行を作る
+sort：並べ替え
 
---exclude-type=...
-RAM上の疑似ファイルシステムを除外して
-**“実ディスクの感覚に近い合計”**にする
+-u：unique（重複除外）
 
-CPU使用率
+→ 物理CPU数は
+**“physical idの種類数”**なので
+重複除外して数えるのが理屈に合う。
 
-top -bn1
+wc -l
 
+wc：数える
 
+-l：行数
 
-    top = プロセス/CPU状況
+→ ユニークな physical id の数 = 物理CPU数
 
-    -b = バッチモード（文字出力）
-
-    -n1 = 1回だけ
-
-そこから
-user と system を足して
-“ざっくりCPU使用率”にしています。
+3) vCPU
+cpuv=$(grep "processor" /proc/cpuinfo | wc -l)
 
 
-最終再起動
+processor は
+OSが見ている論理CPU（スレッド単位）の番号行。
 
-who -b
+VMではこれが割り当てvCPU数に相当。
 
-who = ログイン/システム状態
+4) RAM
+ram_total=$(free --mega | awk '$1 == "Mem:" {print $2}')
+ram_use=$(free --mega | awk '$1 == "Mem:" {print $3}')
+ram_percent=$(free --mega | awk '$1 == "Mem:" {printf("%.2f"), $3/$2*100}')
 
--b = last boot を表示
+free
 
-LVM use
+メモリの使用状況を表示。
 
-lsblk | grep -q "lvm"
+--mega
 
-lsblk = ディスク構造表示
+MB単位で表示。（見やすさ重視）
 
-grep -q = 見つかったかどうかだけ判定（表示しない）
+awk
 
-TCP接続数
+表（列）から必要な部分を抜き、計算・整形する道具。
 
-ss -ta state established
+'$1 == "Mem:" {print $2}'
 
-ss = 通信状況
+$1 = 1列目
 
--t = TCP
+$2 = 2列目
 
--a = 全部
+行の先頭が Mem: の行だけ対象
 
-state established = 接続中のものだけ
+Mem: 行は
+合計 / 使用 / 空きなどの本体行。
 
-ログインユーザー数
+だから
 
-who | wc -l
+$2 = 合計
 
-who = ログイン中ユーザー
+$3 = 使用
 
-wc -l = 行数
-→ ＝人数の目安
+という読み方。
 
-IPv4 & MAC
+printf("%.2f")
+
+小数2桁で綺麗に表示。
+
+5) DISK
+disk_total
+disk_total=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_t += $2} END {printf ("%.1fGb"), disk_t/1024}')
+
+df
+
+ディスク使用量。
+
+-m
+
+MB単位।
+
+grep "/dev/"
+
+実ディスクっぽい行に限定。
+
+grep -v "/boot"
+
+-v = 除外
+boot領域を計算から除く意図。
+
+awk '{disk_t += $2} END {...}'
+
+$2 は通常“容量”列
+
+合計して最後に出す。
+
+disk_t/1024
+
+MB → GB 変換。
+
+disk_use
+disk_use=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_u += $3} END {print disk_u}')
+
+
+$3 は通常“使用量”列。
+
+disk_percent
+disk_percent=$(df -m | grep "/dev/" | grep -v "/boot" \
+  | awk '{disk_u += $3} {disk_t+= $2} END {printf("%d"), disk_u/disk_t*100}')
+
+
+使用合計 ÷ 容量合計 × 100
+という“あなたが自分で率を作っている”のが本質。
+
+6) CPU load
+cpul=$(vmstat 1 2 | tail -1 | awk '{printf $15}')
+cpu_op=$(expr 100 - $cpul)
+cpu_fin=$(printf "%.1f" $cpu_op)
+
+vmstat
+
+CPU/メモリ/IOなどの概要表示。
+
+1 2
+
+1秒間隔で
+
+2回取得
+
+最初の1回はウォームアップ的なので
+2回目の値を使うのが定番。
+
+tail -1
+
+最後の1行 = 2回目の結果。
+
+awk '{printf $15}'
+
+vmstat の列のうち
+**idle（CPUが暇だった割合）**に該当する列を拾っている想定。
+
+expr 100 - $cpul
+
+expr は整数計算。
+100 - idle = 使用率
+
+という理屈。
+
+7) Last boot
+lb=$(who -b | awk '$1 == "system" {print $3 " " $4}')
+
+who
+
+ログイン情報など。
+
+-b
+
+last boot
+最終起動時刻。
+
+8) LVM use
+lvmu=$(if [ $(lsblk | grep "lvm" | wc -l) -gt 0 ]; then echo yes; else echo no; fi)
+
+lsblk
+
+ディスク構造の表示。
+
+grep "lvm"
+
+LVMに関連する行があるか確認。
+
+wc -l
+
+行数。
+
+[ ... -gt 0 ]
+
+-gt = greater than
+0より大きいか？
+
+→ あれば yes / なければ no。
+
+9) TCP connections
+tcpc=$(ss -ta | grep ESTAB | wc -l)
+
+ss
+
+通信状況。
+
+-t
+
+TCP。
+
+-a
+
+全て。
+
+ESTAB
+
+ESTABLISHED（接続確立中）。
+
+10) User log
+ulog=$(users | wc -w)
+
+users
+
+ログイン中ユーザー名を並べる。
+
+wc -w
+
+-w = 単語数
+= 人数の目安。
+
+11) Network
+ip=$(hostname -I | awk '{print $1}')
+mac=$(ip link show | awk '/link\/ether/ {print $2; exit}')
 
 hostname -I
+
+IP一覧。
+
+→ 複数出ることがあるので
+awk '{print $1}' で“代表1個”に絞る。
+
 ip link show
 
-hostname -I = IP一覧
+NIC（ネットワーク機器）一覧。
 
-awk '{print $1}' で先頭のIPv4を採用
+awk '/link\/ether/ {print $2; exit}'
 
-ip link show で link/ether を拾うとMAC
+link/ether 行の
 
-sudoコマンド回数
+2列目がMAC
 
-journalctl _COMM=sudo | grep -c "COMMAND"
+exit で最初の1個だけ採用
 
-journalctl = systemdログ
+12) Sudo count
+cmnd=$(journalctl _COMM=sudo 2>/dev/null | grep COMMAND | wc -l)
 
-_COMM=sudo = sudoのログに絞る
+journalctl
 
-grep -c = 件数カウント
+systemdのログ閲覧。
 
-課題の「sudoで実行されたコマンド数」を満たす代表的アプローチ。
+_COMM=sudo
 
-5) 実行権限を付ける
+sudo由来のログに限定。
 
-sudo chmod +x /usr/local/bin/monitoring.sh
+2>/dev/null
 
-chmod = 権限変更
+2> = エラー出力をgrep "/dev/" の意味
 
-+x = 実行できるようにする
+grep "/dev/"捨てる
+課題の
+「エラーを見せるな」対策。
 
-6) 手動でテスト
+grep COMMAND
 
-sudo /usr/local/bin/monitoring.sh
+sudoログの中で
+コマンド実行記録に当たる行だけ拾う。
 
-ここでエラーが出ないことが大事。
-課題は “No error must be visible.” と明言。
+wc -l
 
-7) cronで「起動時 + 10分ごと」を作る
+件数。
 
-sudo crontab -e
+最後の wall
+wall " ... "
 
-rootのcronを編集します。
+wall
 
-以下を追加：
+ログイン中の全端末へ一斉表示。
 
-@reboot /usr/local/bin/monitoring.sh
-*/10 * * * * /usr/local/bin/monitoring.sh
+monitoring.shの成果物を
+“館内放送”として配る役。
 
-これを分解
-@reboot
+じゃあ結局、なぜ書き方が大きく変わるの？
 
-起動時に1回実行
+同じゴールでも
 
-*/10 * * * *
+“生データから自力で組み立てる派”
 
-5つの枠は
+あなたの方式
 
-分 時 日 月 曜日
+理解が深くなる
 
-*/10 = 10分ごと
+“意味がまとまったコマンドを使う派”
 
-あとは全部 * で “常に”
+私の最初の方式
 
-cronが設定できたか確認
+短く安全に書ける
 
-sudo crontab -l
+という違いがあるからです。
 
--l = list（一覧表示）
+あなたの目的が
+**“説明できるようになること”**なら
+今の修正版が一番筋がいい。
 
-評価で必ず聞かれるポイント
-「スクリプトを改変せずに止めてください」
+あなたが口頭試問で言えると強い“本質の一言”
 
-答えはこれ。
-
-方法A：cronから該当行を消す/コメントアウト
-
-sudo crontab -e
-
-方法B：cronサービスを止める
-
-（環境により）
-
-sudo systemctl stop cron
-
-**“スクリプトに手を入れずに止める”**という条件を満たせます。
-よくある詰まりポイント（先回り）
-1) wallが出ない
-
-そもそも wall は
-ログイン中の端末がある時に意味が出る
-VMで1人だけのときは静かに見えることもある。
-
-2) sudo回数が0のまま
-
-それは普通にあり得る
-
-テストとして
-
-sudo ls
-sudo apt update
-
-などを数回実行してから
-再度スクリプト実行。
-
-3) DiskやCPUの数値が例と少し違う
-
-課題は**“表示形式の完全一致”ではなく**
-**“項目が出ていて理屈が説明できるか”**が本質。
+monitoring.shは、OSの健康診断を
+生データ（/procや基本コマンド）から集めて、集計して、
+wallで全員に定期報告する仕組みです。
+10分ごとの自動実行はcronが担当します。
