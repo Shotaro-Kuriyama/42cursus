@@ -1,7 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   push_swap.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/12/23 13:20:12 by skuriyam          #+#    #+#             */
+/*   Updated: 2025/12/23 18:18:49 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
+
+
 
 #include "push_swap.h"
 
-static t_node *new_node(int v)
+t_node *new_node(int v)
 {
     t_node *n;
 
@@ -15,7 +29,7 @@ static t_node *new_node(int v)
 }
 
 // 末尾に追加する
-static int push_back (t_node **a, t_node *n)
+int push_back (t_node **a, t_node *n)
 {
     // 変数aは「先頭ノードを指すポインタ」
     // 変数nは「新しい一つのノード」
