@@ -87,7 +87,7 @@ bool parse_int_strict_by_atoi(const char *s, int *out)
     if (*s != '\0')
         return false;
 
-    *out = (int)(sign * r);   // ★ここが超重要（out じゃなくて *out）
+    *out = (int)(sign * r);  
     return true;
 }
 
@@ -100,38 +100,178 @@ void print_list(t_node *a)
     }
 }
 
-//int main(int argc, char **argv)
-//{
-//    t_node *a = NULL;
-//    t_node *b = NULL;
-//    int i;
-//    int v;
+bool contains(t_node *a, int v)
+{
+	while (a)
+	{
+		if (a->value == v)
+			return (true);
+		a = a->next;
+	}
+	return (false);
+}
 
-//    (void)b;
+int is_ws(char c)
+{
+	if (c == ' ' || (c >= 9 && c <= 13))
+		return 1;
+	return 0;
+}
 
-//    if (argc < 2)
-//        return 1;
+size_t count_words_ws(const char *s)
+{
+	size_t count;
 
-//    i = 1;
-//    while (i < argc)
-//    {
-//        if (!parse_int_strict_by_atoi(argv[i], &v))
-//        {
-//            write(2, "Error\n", 6);
-//            free_list(a);
-//            return 1;
-//        }
+	count = 0;
+	while(*s)
+	{
+		if(*s && !is_ws(*s))
+		{
+			count++;
+			while (*s && !is_ws(*s))
+				s++;
+			
+		}
+		else
+			s++;
+	}
+	return count;
+}
 
-//        if (!push_back(&a, new_node(v)))
-//        {
-//            write(2, "Error\n", 6);
-//            free_list(a);
-//            return 1;
-//        }
-//        i++;
-//    }
+char *dup_range(const char *start, size_t len)
+{
+	char *p;
+	size_t i;
 
-//    print_list(a);
-//    free_list(a);
-//    return 0;
-//}
+	p = malloc(sizeof(*p) * (len + 1));
+	if (!p)
+		return NULL;
+
+	i = 0;
+	while(i < len)
+	{
+		p[i] = start[i];
+		i++;
+	}
+	p[i] = '\0';
+	return (p);
+}
+
+void free_split(char **tokens)
+{
+	size_t i;
+
+	if (!tokens)
+		return;
+
+	i = 0;
+	while (tokens[i])
+	{
+		free(tokens[i]);
+		i++;
+	}
+	free(tokens);
+	
+}
+
+char **split_ws(const char *s)
+{
+	size_t words;
+	char **tokens;
+	size_t idx;
+	const char *start;
+	size_t len;
+
+	
+	words = count_words_ws(s);
+
+	tokens = malloc(sizeof (*tokens) * (words + 1));
+	if (!tokens)
+		return NULL;
+	
+	idx = 0;
+	while (*s)
+	{
+		while (*s && is_ws(*s))
+			s++;
+		if (!*s)
+			break;
+		start = s;
+		while (*s && !is_ws(*s))
+			s++;
+		len = (size_t)(s - start);
+
+		tokens[idx] = dup_range(start, len);
+		if (!tokens[idx])
+		{
+			while (idx > 0)
+				free(tokens[--idx]);
+			free(tokens);
+			return NULL;
+		}
+		idx++;
+	}
+	tokens[idx] = NULL; //配列を走査するための終端の印（センチネル）
+	return tokens;
+}
+
+int error_exit(t_node **a, char **tokens)
+{
+	write(2, "Error\n", 6);
+	free_split(tokens);
+	free_list(*a);
+	*a = NULL;
+	return 1;
+}
+
+int main(int argc, char **argv)
+{
+    t_node *a = NULL;
+    t_node *b = NULL;
+    int i;
+    int v;
+	char **tokens;
+	int j;
+	t_node *n;
+    (void)b;
+
+    if (argc < 2)
+        return 0;
+
+    i = 1;
+	j = 0;
+    while (i < argc)
+    {
+		// argv[i]が"1 2 3"みたいな場合は分割
+		tokens = split_ws(argv[i]);
+		if (!tokens)
+			return (error_exit(&a, NULL));
+		// tokens[0]がない→argv[i]が空白のみ→この場合はErrorにしたい
+		if (!tokens[0])
+			return (error_exit(&a, tokens));
+
+		j = 0;
+		while (tokens[j])
+		{
+			// 文字列をintに変換
+			if (!parse_int_strict_by_atoi(tokens[j], &v))
+				return error_exit(&a, tokens);
+			// 重複がないか確認
+			if (contains(a, v))
+				return error_exit(&a, tokens);
+			// ノードつけるのを失敗したらダメ
+			n = new_node(v);
+        	if (!n)
+				return error_exit(&a, tokens);
+			push_back(&a, n);
+			j++;
+		}
+		free_split(tokens);
+        i++;
+    }
+
+	//スタックaが正しく積めているか確認
+    print_list(a);
+    free_list(a);
+    return 0;
+}
