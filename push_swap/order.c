@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 17:53:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/26 03:17:49 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/26 04:51:13 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,30 +58,71 @@ void ss(t_node **a, t_node **b)
 
 void pa(t_node **a, t_node **b)
 {
-	t_node *a_start;
 	t_node *b_start;
 
-	a_start = *a;
-	b_start = *b;
+	if (!b || !*b)
+		return;
 
+	b_start = *b;
 	*b = b_start->next;
 
-	b_start->next = a_start;
+	b_start->next = *a;
 	*a = b_start;
 } 
 
 void pb(t_node **a, t_node **b)
 {
 	t_node *a_start;
-	t_node *b_start;
 
+	if (!a || !*a)
+		return ;
+	
 	a_start = *a;
-	b_start = *b;
-
 	*a = a_start->next;
-	a_start->next = b_start;
 
+	a_start->next = *b;
+	b = a_start;
 }
+
+void ra(t_node **a)
+{
+	t_node *first;
+	t_node *last;
+
+	if (!a || !*a || !(*a)->next)
+		return ;
+
+	first = *a;
+	*a = first->next;
+
+	last = *a;
+	while(last->next)
+		last = last->next;
+	
+	first->next = NULL;
+	last->next = first;
+}
+
+void rb(t_node **b)
+{
+    t_node *first;
+    t_node *last;
+
+    if (!b || !*b || !(*b)->next)
+        return;
+
+    first = *b;
+    *b = first->next;
+
+    first->next = NULL;
+
+    last = *b;
+    while (last->next)
+        last = last->next;
+
+    last->next = first;
+}
+
 
 int main(int argc, char **argv)
 {
