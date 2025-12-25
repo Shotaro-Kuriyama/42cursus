@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 17:53:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/25 14:07:44 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/26 03:17:49 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,7 @@ void ss(t_node **a, t_node **b)
 	sb(b);
 }
 
-t_node *pa(t_node **a, t_node **b)
+void pa(t_node **a, t_node **b)
 {
 	t_node *a_start;
 	t_node *b_start;
@@ -69,6 +69,19 @@ t_node *pa(t_node **a, t_node **b)
 	b_start->next = a_start;
 	*a = b_start;
 } 
+
+void pb(t_node **a, t_node **b)
+{
+	t_node *a_start;
+	t_node *b_start;
+
+	a_start = *a;
+	b_start = *b;
+
+	*a = a_start->next;
+	a_start->next = b_start;
+
+}
 
 int main(int argc, char **argv)
 {
