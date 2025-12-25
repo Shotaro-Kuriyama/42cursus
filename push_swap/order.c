@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 17:53:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/23 19:03:11 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/25 14:07:44 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,20 +58,16 @@ void ss(t_node **a, t_node **b)
 
 t_node *pa(t_node **a, t_node **b)
 {
-	t_node *a_cur;
-	t_node *b_cur;
-	t_node push;
+	t_node *a_start;
+	t_node *b_start;
 
-	a_cur = *a;
-	b_cur = *b;
+	a_start = *a;
+	b_start = *b;
 
-	push = *b_cur;
+	*b = b_start->next;
 
-	
-
-
-
-
+	b_start->next = a_start;
+	*a = b_start;
 } 
 
 int main(int argc, char **argv)
