@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   order.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 17:53:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/26 04:51:13 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/26 18:32:32 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,53 @@ void rb(t_node **b)
 
     last->next = first;
 }
+
+void rr(t_node **a, t_node **b)
+{
+	ra(a);
+	rb(b);
+}
+
+//末尾ノードを外す
+//それを先頭にする
+void rra (t_node **a)
+{
+	t_node *prev_last;
+	t_node *last;
+
+	prev_last = *a;
+
+	while (prev_last->next->next)
+		prev_last = prev_last->next;
+
+	last = prev_last->next;
+	last->next = *a;
+	*a = last;
+}
+
+void rrb(t_node **b)
+{
+	t_node *prev_last;
+	t_node *last;
+
+	prev_last = *b;
+
+	while (prev_last->next->next)
+		prev_last = prev_last->next;
+
+	last = prev_last->next;
+	last->next = *b;
+	*b = last;
+}
+
+void rrr(t_node **a, t_node **b)
+{
+	rra(a);
+	rrb(b);
+}
+
+
+
 
 
 int main(int argc, char **argv)

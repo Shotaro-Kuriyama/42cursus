@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:49:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/23 18:22:48 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/26 17:30:17 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
