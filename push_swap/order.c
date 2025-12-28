@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   order.c                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 17:53:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/26 18:32:32 by shotarokuri      ###   ########.fr       */
+/*   Updated: 2025/12/28 15:08:47 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -166,6 +166,8 @@ void rrr(t_node **a, t_node **b)
 	rra(a);
 	rrb(b);
 }
+
+
 
 
 
