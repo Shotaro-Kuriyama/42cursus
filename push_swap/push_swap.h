@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:49:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/26 17:30:17 by shotarokuri      ###   ########.fr       */
+/*   Updated: 2025/12/28 18:55:25 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,18 @@ typedef struct s_node {
     int value;  //箱の中身（数値）
     struct s_node *next; //次の箱への矢印（ポインタ）
 } t_node;
+
+
+
+/*
+typedef struct s_node {
+    int value;  //箱の中身（数値）
+    struct s_node *next; //次の箱への矢印（ポインタ）
+	struct s_node *prev; (previous = 前の)
+} t_node;
+*/
+
+// head = 先頭、 tail = 最後
 
 
 //ここはスタックaを作るための関数群
