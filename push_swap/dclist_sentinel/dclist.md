@@ -149,3 +149,185 @@ B. 実装する最小API（これだけで十分）
 ・pop_front / pop_back
 ・print_forward / print_backward（確認用）
 ・validate（任意だが超おすすめ：壊れたらすぐ分かる）
+
+
+
+##　関数の解説
+
+
+void push_front(t_list *l, t_node *n)
+{
+    link_between(&l->sent, n, l->sent.next);
+    l->size++;
+}
+
+なぜこれらがlink_betweenに渡されるのか？
+
+
+1) まず「実体」と「ポインタ」を分ける
+(A) t_list *l
+l は リスト構造体へのポインタ。
+・l 自体は「住所（アドレス）」を持っているだけ
+・l->sent で「その住所にある構造体の中の sent 実体」にアクセスする
+
+(B) l->sent は “実体”
+sent は t_list の中に 埋め込まれている t_node の実体です。
+つまり sent は「箱そのもの」。
+・l->sent だけだと型は t_node（ポインタじゃない）
+
+(C) &l->sent は “番兵実体のアドレス（ポインタ）”
+& をつけると「その実体が置かれている住所」を取れます。
+・&l->sent の型は t_node*
+・link_between(t_node *a, ...) は t_node* を要求してるので、ここで & が必要
+
+2) link_between が期待してる世界
+
+あなたの関数：
+
+static void link_between(t_node *a, t_node *n, t_node *b)
+{
+    a->next = n;
+    n->prev = a;
+    n->next = b;
+    b->prev = n;
+}
+これは一言で言うと：
+
+「a と b がすでに隣り合っているところに、n を間に挟む」
+
+つまり n を (a と b の間) に差し込む関数です。
+
+
+3) push_front のやりたいこと（結論から）
+
+push_front は「先頭に入れる」なので、番兵つき循環リストだと：
+・先頭の位置は常に 番兵 sent の次（sent.next）
+・だから新ノード n を入れる場所は
+
+sent と “今の先頭” の間
+
+になります。
+つまり、挿入したい形は：
+
+sent <-> n <-> (旧先頭)
+
+4) だから引数がこうなる
+
+コード：
+
+static void push_front(t_list *l, t_node *n)
+{
+    link_between(&l->sent, n, l->sent.next);
+    l->size++;
+}
+
+これを1個ずつ型と意味で分解します。
+
+引数1：&l->sent
+・l->sent は 番兵ノードの実体 (t_node)
+・link_between は t_node *a を要求
+・だから & をつけて 番兵実体のアドレス (t_node)* を渡す
+
+✅ これで a は「番兵ノード」を指すポインタになる
+
+引数2：n
+・n は t_node *n
+・すでにポインタとして受け取っているので、そのまま渡す
+
+✅ n は「挿入したい新ノード」
+
+引数3：l->sent.next
+ここが一番大事。
+・l->sent.next は 番兵ノードの next フィールド
+・その型は t_node *（＝“次のノードへのポインタ”）
+・これは「現在の先頭ノード」を指している
+
+✅ b は「旧先頭（今まで先頭だったノード）」になる
+
+
+5) 図で「挿入前 → 挿入後」を見る
+ケースA：空のリスト（初期状態）
+
+番兵つき循環リストは、空のときこうなってます：
+
+sent.next -> sent
+sent.prev -> sent
+
+つまり図にすると：
+
+   +------+
+   | sent |
+   +------+
+    ^    |
+    |    v
+   prev  next
+    |    |
+    +----+
+
+このとき l->sent.next は &l->sent です（番兵自身）。
+
+なので push_front は：
+・a = &sent
+・b = sent.next = &sent
+
+ここに n を挟むと…
+
+挿入後：
+
+sent <-> n <-> sent
+
+空でも成立するのが、番兵循環の強みです。
+
+
+ケースB：要素があるリスト（旧先頭が X）
+
+挿入前がこうだったとします：
+
+sent <-> X <-> ... <-> Y <-> sent
+
+このとき
+・l->sent.next は X
+・だから link_between(&sent, n, X) になる
+
+挿入後：
+
+sent <-> n <-> X <-> ... <-> Y <-> sent
+
+ちゃんと「先頭に追加」になっています。
+
+6) link_between が実際に何を書き換えるか（順番つき）
+挿入前： sent <-> X
+
+呼び出し： link_between(&sent, n, X)
+中身：
+
+1. a->next = n;
+sent.next が X から n に変わる（先頭が n になる）
+2. n->prev = a;
+n.prev は sent を指す（n の前は番兵）
+3. n->next = b;
+n.next は X を指す（n の次は旧先頭）
+4. b->prev = n;
+X.prev が sent から n に変わる（X の前は n になる）
+
+これで 4本の矢印が整い、両方向で繋がります。
+
+7) 「混合して訳わからない」を一発で整理するコツ
+✅ ルール1：. と -> は “実体かポインタか” の違い
+・obj.field … obj が 実体
+・ptr->field … ptr が ポインタ
+
+あなたのコードで：
+・l はポインタなので l->sent
+・sent は実体なので l->sent.next
+
+✅ ルール2：埋め込み実体を t_node* として扱いたいときだけ &
+・l->sent は実体（t_node）
+・&l->sent はポインタ（t_node*）
+
+link_between は t_node* を取るから & が必要、ただそれだけです。
+
+8) 最後に：l->size++ の意味
+size は通常 **「番兵以外の実ノード数」**です。
+・push_front で 1つ増えたので l->size++
+・番兵は常に1個あるけど、サイズに含めない（含める設計もあるが、このコードは含めない設計）
