@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dclist.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 20:54:27 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/30 19:18:38 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/12/31 00:56:31 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,11 +98,41 @@ t_node *pop_front(t_list *l)
 
 	if (list_empty(l))
 		return NULL;
-	n = l->sent.prev;
+	n = l->sent.next;
 	unlink_node(n);
 	l->size--;
 	return n;
 }
+
+t_node *pop_back(t_list *l)
+{
+    t_node *n;
+
+    if (list_empty(l))
+        return NULL;
+    n = l->sent.prev;
+    unlink_node(n);
+    l->size--;
+    return n;
+}
+
+void print_forward(const t_list *l)
+{
+    const t_node *cur;
+
+    cur = l->sent.next; //番兵アドレスからt_nodeの先頭に飛べる
+    printf("[F] size=%zu : ", l->size);
+    while (cur != &l->sent) //「番兵と一致するまで」という条件でok
+    {
+        printf("%d ", cur->v);
+        cur = cur->next; //番兵のsentの*nextから取り出したが、普通にt_nodeで使える
+    }
+    printf("\n");
+}
+
+
+
+
 
 
 
