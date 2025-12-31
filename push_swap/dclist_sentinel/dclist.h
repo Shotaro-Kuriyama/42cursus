@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   dclist.h                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/29 10:05:39 by shotarokuri       #+#    #+#             */
-/*   Updated: 2025/12/31 17:52:05 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/01 04:37:26 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@
 # include <stdbool.h>
 
 typedef struct s_node {
-    int             value;  // もとの v
+    int             value;
     struct s_node  *prev;
     struct s_node  *next;
 } t_node;
