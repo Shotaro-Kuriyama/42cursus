@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_sentinel.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 19:18:03 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/31 23:41:56 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/03 00:47:30 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,8 @@ static void insert_after(t_node *pos, t_node *node)
 * detach:
 *   node をリストから抜き取る（前後をつなぎ直す）
 */
-static void detach(t_node *node)
+//unlink_node(node)
+void detach(t_node *node)
 {
 	node->prev->next = node->next; // L <-> node <-> Rで、node->prev->next → L->next = R
 	node->next->prev = node->prev; // L <-> node <-> Rで、node->next->prev → R->prev = L
@@ -67,14 +68,47 @@ t_node *new_node(int value)
 	return node;	
 }
 
-/* 末尾追加：O(1)（番兵の prev が末尾を指す） */
-int push_back_stack(t_stack *stack, t_node *node)
+void push_front_stack(t_stack *stack, t_node *node)
 {
-	if (!node)
-		return 0;
+    if (!stack || !node)
+        return;
+    // 先頭に挿入：sentinel と sentinel.next の間
+    insert_after(&stack->sentinel, node);
+    stack->size++;
+}
+
+/* 末尾追加：O(1)（番兵の prev が末尾を指す） */
+void push_back_stack(t_stack *stack, t_node *node)
+{
+	if (!stack || !node)
+		return ;
+    // 末尾に挿入：末尾(stack->sentinel.prev) と sentinel の間
 	insert_after(stack->sentinel.prev, node);
 	stack->size++;
-	return 1;
+}
+//　先頭を取り出す
+t_node *pop_front_stack(t_stack *stack)
+{
+    t_node *node;
+
+    if (!stack || stack->size == 0)
+        return NULL;
+    node = stack->sentinel.next;
+    detach(node);
+    stack->size--;
+    return node;
+}
+// 末尾を取り出す
+t_node *pop_back_stack(t_stack *stack)
+{
+    t_node *node;
+
+    if (!stack || stack->size == 0)
+        return NULL;
+    node = stack->sentinel.prev;
+    detach(node);
+    stack->size--;
+    return node;
 }
 
 void free_stack(t_stack *stack)
@@ -294,8 +328,104 @@ static int error_exit(t_stack *stack_a, char **words)
 	return 1;
 }
 
+bool stack_validate(const t_stack *stack)
+{
+    const t_node *sentinel;
+    const t_node *current;
+    const t_node *next_node;
+    const t_node *prev_node;
+    size_t  i;
+
+    if (!stack)
+        return false;
+
+    sentinel = &stack->sentinel;
+    
+    /* sentinel 自体のリンクが NULL なのは異常 */
+    if (!sentinel->next || !sentinel->prev)
+        return false;
+
+    /* 空のときは "自分を指す" 形が必須条件*/
+    if (stack->size == 0)
+    {
+        if (sentinel->next != sentinel)
+            return false;
+        if (sentinel->prev != sentinel)
+            return false;
+        return true;
+    }
+
+    /* size > 0 なのに self-loop は異常 */
+    if (sentinel->next == sentinel || sentinel->prev == sentinel)
+        return false;
+    
+    /*
+    * (1) next方向: リンク整合性チェック
+    *    「current->next の prev は current である」
+    *    を辿りながら確認
+    */
+    current = sentinel;
+    i = 0;
+    while (i < stack->size + 1)
+    {
+        next_node = current->next;
+        if (!next_node)
+            return false;
+        if (next_node->prev != current)
+            return false;
+        current = next_node;
+        i++;
+    }
+    /* ちょうど size+1 歩で sentinel に戻るべき */
+    if (current != sentinel)
+        return false;
+    
+    /*
+    * (2) prev方向: リンク整合性チェック
+    *    「current->prev の next は current」
+    */
+    current = sentinel;
+    i = 0;
+    while (i < stack->size + 1)
+    {
+        prev_node = current->prev;
+        if (!prev_node)
+            return false;
+        if (prev_node->next != current)
+            return false;
+        current = prev_node;
+        i++;
+    }
+    if (current != sentinel)
+        return false;
+
+    /*
+    * (3) 実ノード数を数えて size と一致するかチェック
+    *     ※ size が間違っていても (1)(2) が偶然通るケースがあるため
+    * ケースA：実際のノード数 N と size が
+    * ズレてるけど、size+1 が “1周の長さ” の倍数
+    * ケースB：輪は正しいが size が 
+    * “大きすぎる” ケースが特に危険
+    */
+    current = sentinel->next;
+    i = 0;
+    while (current != sentinel && i <= stack->size)
+    {
+        current = current->next;
+        i++;
+    }
+    /* sentinel に戻れない or sizeを超えても戻れないのは異常 */
+    if (current != sentinel)
+        return false;
+    /* 実ノード数 i は size と一致するべき */
+    if (i != stack->size)
+        return false;
+    return true;
+}
+
 int main(int argc, char **argv)
 {
+
 	t_stack stack_a;
 	t_stack stack_b;
 
@@ -336,8 +466,7 @@ int main(int argc, char **argv)
             if (!node)
                 return error_exit(&stack_a, words);
 
-            if (!push_back_stack(&stack_a, node))
-                return error_exit(&stack_a, words);
+            push_back_stack(&stack_a, node);
 
             word_index++;
         }
@@ -346,7 +475,7 @@ int main(int argc, char **argv)
     }
 
     print_stack(&stack_a);
+    PS_VALIDATE(&stack_a);
     free_stack(&stack_a);
     return 0;
 }
-

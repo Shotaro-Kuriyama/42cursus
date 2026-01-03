@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:49:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/31 23:51:55 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/02 21:19:56 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,23 @@
 # include <stdio.h>
 # include <stdbool.h>
 # include <unistd.h>
+
+/* =========================
+   DEBUG ASSERT (validate用)
+   ========================= */
+
+#ifdef DEBUG
+# define PS_VALIDATE(stackptr) do { \
+    if (stack_validate((stackptr))) \
+        write(2, "validate ok\n", 12); \
+    else { \
+        write(2, "validate fail\n", 14); \
+        _exit(1); \
+    } \
+} while (0)
+#else
+# define PS_VALIDATE(stackptr) ((void)0)
+#endif
 
 typedef struct s_node {
     int             value;
@@ -40,10 +57,11 @@ typedef struct s_stack {
 /* stack base */
 void    stack_init(t_stack *stack);
 t_node  *new_node(int value);
-int     push_back_stack(t_stack *stack, t_node *node);
+void    push_back_stack(t_stack *stack, t_node *node);
 void    free_stack(t_stack *stack);
 void    print_stack(t_stack *stack);
 bool    contains_stack(t_stack *stack, int value);
+void    detach(t_node *node);
 
 /* parse */
 bool    parse_int_strict(const char *p, int *out_value);
