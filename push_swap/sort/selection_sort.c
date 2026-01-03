@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 17:44:00 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/03 21:01:43 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/03 21:17:31 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,7 @@ void selection_sort(int *a, int n) //*a:配列、 n:配列のindexの数
 	int i;
 	int j;
 	int min_i;
+	int swap;
 
 	i = 0;
 	j = 0;
@@ -39,17 +40,20 @@ void selection_sort(int *a, int n) //*a:配列、 n:配列のindexの数
 	while (i < n - 1)
 	{
 		min_i = i;
-		j = 0;
+		j = i + 1;
 		while (j < n)
 		{
-			if (a[min_i] > a[j + i])
-				min_i = a[j + i];
+			if (a[j] < a[min_i])
+				min_i = j;
 			j++;
 		}
-		a[i] =min_i;
+		swap = a[i];
+		a[i] = a[min_i];
+		a[min_i] = swap;
 		i++;
 	}
 }
+
 
 int main(void)
 {
