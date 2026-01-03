@@ -1,42 +1,54 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_bzero.c                                         :+:      :+:    :+:   */
+/*   bubble_sort.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2025/10/18 10:13:25 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:50:22 by skuriyam         ###   ########.fr       */
+/*   Created: 2026/01/03 20:02:09 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/03 20:22:53 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "libft.h"
+#include <stdio.h>
 
-void	ft_bzero(void *s, size_t n)
+//隣同士を比べて、でかいのを右へ押し出す
+
+void bubble_sort(int *a, int n)
 {
-	size_t			i;
-	unsigned char	*p;
+	int i;
+	int j;
+	int swap;
 
-	p = (unsigned char *)s;
 	i = 0;
 	while (i < n)
 	{
-		p[i] = '\0';
+		j = 0;
+		while (j < n - 1)
+		{
+			if (a[j] > a[j + 1])
+			{
+				swap = a[j];
+				a[j] = a[j + 1];
+				a[j + 1] = swap;
+			}
+			j++;
+		}
 		i++;
 	}
 }
 
-//#include <stdio.h>
-//#include <strings.h>
+int main(void)
+{
+	int a[] = {9, 2, 7, 5, 1, 3};
+	int i;
 
-// int main(void)
-//{
-//	char buf[] = "ABCDEFGHIJK";
-//	char buf2[] = "ABCDEFGHIJK";
-
-//	bzero(buf+2, 5);
-//	ft_bzero(buf2+2, 5);
-
-//	printf("%s\n", buf);
-//	printf("%s\n", buf2);
-//}
+	bubble_sort(a, 6);
+	i = 0;
+	while (i < 6)
+	{
+		printf ("%d, ", a[i]);
+		i++;
+	}
+	printf("\n");
+}

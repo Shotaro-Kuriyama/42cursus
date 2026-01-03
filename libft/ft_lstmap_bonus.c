@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstmap.c                                        :+:      :+:    :+:   */
+/*   ft_lstmap_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/27 20:55:03 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:53:19 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/30 17:59:26 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,14 +46,13 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 //#include <stdlib.h>
 //#include <string.h>
 
-// static void	*dup_upper(void *p)
+//static void	*dup_upper(void *p)
 //{
 //	char	*s;
 //	size_t	n;
 //	char	*q;
 //	size_t	i;
 
-//	// 受け取った char* を大文字化して新しいバッファを返す
 //	s = (char *)p;
 //	n = strlen(s);
 //	q = malloc(n + 1);
@@ -66,22 +65,21 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 //		i++;
 //	}
 //	q[n] = '\0';
-//	return (q); // new_content（ヒープ確保）
+//	return (q);
 //}
 
-// static void	del_str(void *p)
+//static void	del_str(void *p)
 //{
-//	free(p); // new_content を解放
+//	free(p);
 //}
 
-// int	main(void)
+//int	main(void)
 //{
 //	t_list	*a;
 //	t_list	*b;
 //	t_list	*c;
 //	t_list	*mapped;
 
-//	// 元リスト: ["ab", "cD", "42"]
 //	a = ft_lstnew(strdup("ab"));
 //	b = ft_lstnew(strdup("cD"));
 //	c = ft_lstnew(strdup("42"));
@@ -90,12 +88,10 @@ t_list	*ft_lstmap(t_list *lst, void *(*f)(void *), void (*del)(void *))
 //	mapped = ft_lstmap(a, dup_upper, del_str);
 //	while (mapped != NULL)
 //	{
-//		printf("%s\n", (char *)mapped->content); // AB / CD / 42
+//		printf("%s\n", (char *)mapped->content);
 //		mapped = mapped->next;
 //	}
-//	// 後始末: 新リストは新しいメモリを持つので clear 必須
 //	ft_lstclear(&mapped, del_str);
-//	// 元リストも各 content は strdup したので解放が必要
 //	ft_lstclear(&a, del_str);
 //	return (0);
 //}

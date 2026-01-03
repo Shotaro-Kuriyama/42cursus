@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 15:09:38 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 16:30:18 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/09 16:51:04 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	*ft_memchr(const void *s, int c, size_t len)
 	size_t				i;
 	unsigned char		uc;
 
+	if (!s)
+		return (NULL);
 	uc = (unsigned char)c;
 	p = (const unsigned char *)s;
 	i = 0;

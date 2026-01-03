@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 11:10:05 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:53:55 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/30 17:58:09 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 
 //#include <stdio.h>
 
-// static void	dump_bytes(const void *p, size_t n)
+//static void	dump_bytes(const void *p, size_t n)
 //{
 //	const unsigned char	*b = (const unsigned char *)p;
 //	size_t				i;
@@ -46,7 +46,7 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 //	printf("\n");
 //}
 
-// int	main(void)
+//int	main(void)
 //{
 //	char s1[] = "42Tokyo";
 //	char s2[] = "42Kyoto";
@@ -54,9 +54,9 @@ int	ft_memcmp(const void *s1, const void *s2, size_t n)
 
 //	int j = 123173831;
 //	int k = 182874326;
-//	size_t n2 = sizeof j; // 可搬性◎
+//	size_t n2 = sizeof j;
 
-//	printf("ft_memcmp(s1,s2,%zu) = %d\n", n1, ft_memcmp(s1, s2, n1)); // 例：9
+//	printf("ft_memcmp(s1,s2,%zu) = %d\n", n1, ft_memcmp(s1, s2, n1));
 
 //	printf("j bytes: ");
 //	dump_bytes(&j, n2);

@@ -6,11 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:37:54 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:56:13 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:14:18 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
+#include "libft.h"
 
 char	*ft_strchr(const char *s, int c)
 {
@@ -31,7 +31,7 @@ char	*ft_strchr(const char *s, int c)
 //#include <stdio.h>
 //#include <string.h>
 
-//int	main(void)
+// int	main(void)
 //{
 //	char s[] = "42Tokyo";
 //	int c = 'T';

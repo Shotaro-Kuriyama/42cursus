@@ -6,14 +6,13 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 09:31:22 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:55:32 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 18:15:34 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <stddef.h>
-#include <stdlib.h>
+#include "libft.h"
 
-size_t	count_word(const char *s, char c)
+static size_t	count_word(const char *s, char c)
 {
 	size_t	in_word;
 	size_t	count;
@@ -72,6 +71,8 @@ char	**ft_split(const char *s, char c)
 	size_t		i;
 	const char	*start;
 
+	if (!s)
+		return (NULL);
 	word = count_word(s, c);
 	p = (char **)malloc(sizeof(*p) * (word + 1));
 	if (!p)
@@ -89,8 +90,7 @@ char	**ft_split(const char *s, char c)
 			return (free_all(p, i));
 		i++;
 	}
-	p[i] = NULL;
-	return (p);
+	return (p[i] = NULL, p);
 }
 
 //#include <stdio.h>

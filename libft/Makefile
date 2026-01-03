@@ -6,7 +6,7 @@
 #    By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
 #    Created: 2025/10/28 15:48:29 by skuriyam          #+#    #+#              #
-#    Updated: 2025/10/30 17:44:48 by skuriyam         ###   ########.fr        #
+#    Updated: 2025/10/30 17:53:41 by skuriyam         ###   ########.fr        #
 #                                                                              #
 # **************************************************************************** #
 
@@ -32,7 +32,6 @@ BONUS_SRCS = ft_lstnew_bonus.c ft_lstadd_front_bonus.c ft_lstsize_bonus.c ft_lst
 OBJS        = $(SRCS:.c=.o)
 BONUS_OBJS  = $(BONUS_SRCS:.c=.o)
 
-# ← ここがポイント：WITH_BONUS=1 の時だけ OBJS_ALL に bonus を足す
 ifdef WITH_BONUS
 OBJS_ALL = $(OBJS) $(BONUS_OBJS)
 else
@@ -41,11 +40,9 @@ endif
 
 all: $(NAME)
 
-# 依存は OBJS_ALL に一本化。ar はここだけで実行される
 $(NAME): $(OBJS_ALL)
 	$(AR) $(NAME) $(OBJS_ALL)
 
-# bonus は「WITH_BONUS=1 を付けて all を呼ぶ」だけ。自分で ar はしない
 bonus:
 	$(MAKE) WITH_BONUS=1 all
 

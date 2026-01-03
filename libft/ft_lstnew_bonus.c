@@ -1,17 +1,16 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   ft_lstnew.c                                        :+:      :+:    :+:   */
+/*   ft_lstnew_bonus.c                                  :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/26 14:24:39 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:53:25 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:13:29 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stdlib.h>
 
 t_list	*ft_lstnew(void *content)
 {
@@ -24,15 +23,15 @@ t_list	*ft_lstnew(void *content)
 	node->next = NULL;
 	return (node);
 }
-
 //#include <stdio.h>
-// int main(void)
+
+// int	main(void)
 //{
-//	char   *s = "Hello";
+//	char *s = "Hello";
 //	t_list *n = ft_lstnew(s);
 
-//	printf("%s\n", (char *)n->content); // キャストして取り出す
-//	// s は文字列リテラルなので free しない
-//	free(n); // ノード自体は free する
+//	printf("%s\n", (char *)n->content);
+
+//	free(n);
 //	return (0);
 //}

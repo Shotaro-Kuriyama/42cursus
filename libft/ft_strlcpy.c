@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/20 11:01:21 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:57:51 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/12 14:15:18 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	size_t	i;
 	size_t	src_len;
 
+	if (!dst || !src)
+		return (0);
 	src_len = ft_strlen(src);
 	if (dstsize == 0)
 		return (src_len);
@@ -30,12 +32,10 @@ size_t	ft_strlcpy(char *dst, const char *src, size_t dstsize)
 	return (src_len);
 }
 
-//#include <stdio.h>
-
 // int	main(void)
 //{
-//	char dst[10];
-//	char src[] = "42Tokyo";
+//	char dst[100];
+//	char *src = NULL;
 
 //	size_t i;
 

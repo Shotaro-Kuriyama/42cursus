@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 11:08:05 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:54:21 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/10/30 17:57:23 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,17 +39,15 @@ void	*ft_memmove(void *dst, const void *src, size_t len)
 //#include <stdio.h>
 //#include <string.h>
 
-// int	main(void)
+//int	main(void)
 //{
 //	char	buf[] = "apple";
 //	char	buf2[] = "apple";
 
 //	printf("%s\n", buf + 2);
-//	// bufの先頭から3バイト進めた位置にbufの先頭から3バイトコピー
 //	memmove(buf + 2, buf, 2);
 //	printf("%s\n", buf + 2);
-//		ft_memmove(buf2 + 2, buf2, 2);
-//	//表示
-//		printf("%s\n", buf2 + 2);
+//	ft_memmove(buf2 + 2, buf2, 2);
+//	printf("%s\n", buf2 + 2);
 //	return (0);
 //}

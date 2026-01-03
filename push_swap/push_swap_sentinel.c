@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_sentinel.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 19:18:03 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/03 00:47:30 by shotarokuri      ###   ########.fr       */
+/*   Updated: 2026/01/03 17:38:19 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@ void stack_init(t_stack *stack)
 */
 
 // link_between(left, node, right)の引数一個減らしたバージョン
-static void insert_after(t_node *pos, t_node *node)
+void insert_after(t_node *pos, t_node *node)
 {
 	//... <-> a <-> pos <-> b <-> ...
 	node->next = pos->next; // node <-> b
@@ -474,8 +474,12 @@ int main(int argc, char **argv)
         arg_index++;
     }
 
-    print_stack(&stack_a);
+    //print_stack(&stack_a);
     PS_VALIDATE(&stack_a);
+
+	//sort3_a(&stack_a);
+	sort5(&stack_a, &stack_b);
+	print_stack(&stack_a);
     free_stack(&stack_a);
     return 0;
 }

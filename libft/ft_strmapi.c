@@ -6,13 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 15:18:38 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 16:01:27 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:14:37 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
-#include <stdlib.h>
 
 char	*ft_strmapi(const char *s, char (*f)(unsigned int, char))
 {

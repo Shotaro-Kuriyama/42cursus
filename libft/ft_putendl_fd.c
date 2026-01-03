@@ -6,13 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:58:08 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:54:52 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:13:39 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
-#include <unistd.h>
 
 void	ft_putendl_fd(char *s, int fd)
 {
@@ -25,13 +23,7 @@ void	ft_putendl_fd(char *s, int fd)
 
 // int	main(void)
 //{
-//	ft_putendl_fd("42Tokyo", 1); // 画面(標準出力)
-//	ft_putendl_fd("Apple", 2); // 画面(標準エラー)
-//	// 挙動の違い（シェルで）
-//	// ./a.out > out.txt
-//	// → "Hello stdout" は out.txt に、"Hello stderr" は画面に表示
-//	//
-//	// ./a.out 1> out.txt 2> err.txt
-//	// → stdout と stderr を別々のファイルに保存
+//	ft_putendl_fd("42Tokyo", 1);
+//	ft_putendl_fd("Apple", 2);
 //	return (0);
 //}

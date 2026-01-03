@@ -6,13 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/21 18:46:20 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 11:39:04 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/08 17:15:22 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
-#include <stdlib.h>
 
 static char	*empty_string(void)
 {

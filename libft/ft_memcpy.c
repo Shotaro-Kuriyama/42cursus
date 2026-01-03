@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/18 10:39:32 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:54:06 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/09 17:24:20 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,6 +18,8 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	const unsigned char	*q;
 	size_t				i;
 
+	if (!dest || !src)
+		return (NULL);
 	p = (unsigned char *)dest;
 	q = (const unsigned char *)src;
 	i = 0;
@@ -29,29 +31,21 @@ void	*ft_memcpy(void *dest, const void *src, size_t n)
 	return (dest);
 }
 
-//#include <stdio.h>
-//#include <string.h>
-//#include <stddef.h>
-
-// int	main(void)
+//int	main(void)
 //{
-//	char	src[] = "123456789";
-//	char	dst1[] = "ABCDDEFG";
-//	char	dst2[] = "ABCDDEFG";
-//	char	a1[] = "ABCDE";
-//	char	a2[] = "ABCDE";
+//	char	*src1;
+//	char	src2[] = "42Tokyo";
+//	char	src3[] = "42Tokyo";
+//	char	*dest1;
+//	char	*p;
 
-//	// 3バイトだけコピー（重なりなしの基本ケース）
-//	memcpy(dst1, src, 3);
-//	ft_memcpy(dst2, src, 3);
-//	printf("コピー後 dst1(標準) → %s\n", dst1); // "123DDEFG"
-//	printf("コピー後 dst2(自作) → %s\n", dst2); // "123DDEFG"
-//	printf("元の src         → %s\n", src);
-//	// 重なりあり: 右へ1バイトずらす
-//	// a1はmemcpy（未定義動作の例）、a2はmemmove（定義済み）
-//	ft_memcpy(a1 + 1, a1, 3); // 未定義動作：多くの実装で "AAAAE"
-//	memmove(a2 + 1, a2, 3);   // 定義された動作："AABCE"
-//	printf("memcpy : %s\n", a1);
-//	printf("memmove: %s\n", a2);
+//	src1 = "42Tokyo";
+//	dest1 = NULL;
+//	p = ft_memcpy(dest1, src1, 2);
+//	printf("%s\n", p);
+//	ft_memcpy(src2 + 2, src2, 4);
+//	printf("memcpy : %s\n", src2 + 2);
+//	memmove(src3 + 2, src3, 4);
+//	printf("memmove: %s\n", src3 + 2);
 //	return (0);
 //}

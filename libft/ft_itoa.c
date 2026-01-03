@@ -6,12 +6,11 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 12:17:33 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:51:07 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:12:26 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <limits.h>
-#include <stdlib.h>
+#include "libft.h"
 
 static size_t	count_len(int n)
 {
@@ -30,7 +29,7 @@ static size_t	count_len(int n)
 	return (len);
 }
 
-char	*num_zero(char *p)
+static char	*num_zero(char *p)
 {
 	p[0] = '0';
 	p[1] = '\0';

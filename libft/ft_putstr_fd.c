@@ -6,21 +6,17 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/24 18:48:06 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:55:02 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/12 13:29:17 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <unistd.h>
+#include "libft.h"
 
 void	ft_putstr_fd(char *s, int fd)
 {
 	if (!s)
 		return ;
-	while (*s)
-	{
-		(void)write(fd, s, 1);
-		s++;
-	}
+	(void)write(fd, s, ft_strlen(s));
 }
 
 // int	main(void)

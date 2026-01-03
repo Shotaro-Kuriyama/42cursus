@@ -6,13 +6,24 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/10/23 11:00:50 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/10/30 15:57:06 by skuriyam         ###   ########.fr       */
+/*   Updated: 2025/11/09 18:08:25 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
-#include <stddef.h>
-#include <stdlib.h>
+
+static size_t	join(const char *s, char *p)
+{
+	size_t	i;
+
+	i = 0;
+	while (s[i])
+	{
+		p[i] = s[i];
+		i++;
+	}
+	return (i);
+}
 
 char	*ft_strjoin(const char *s1, const char *s2)
 {
@@ -21,22 +32,18 @@ char	*ft_strjoin(const char *s1, const char *s2)
 	size_t	i;
 	size_t	j;
 
+	if (!s1 && !s2)
+		return (NULL);
 	len = ft_strlen(s1) + ft_strlen(s2);
 	p = malloc(sizeof(*p) * (len + 1));
 	if (!p)
 		return (NULL);
 	i = 0;
-	while (s1[i])
-	{
-		p[i] = s1[i];
-		i++;
-	}
+	if (s1 != NULL)
+		i = join(s1, p);
 	j = 0;
-	while (s2[j])
-	{
-		p[i + j] = s2[j];
-		j++;
-	}
+	if (s2 != NULL)
+		j = join(s2, (p + i));
 	p[i + j] = '\0';
 	return (p);
 }
@@ -45,11 +52,13 @@ char	*ft_strjoin(const char *s1, const char *s2)
 
 // int	main(void)
 //{
-//	char	s1[] = "42Tokyo";
 //	char	s2[] = "Skytree";
+//	char	*s1;
 //	char	*joined;
 
+//	// char	s1[] = "42Tokyo";
+//	s1 = NULL;
 //	joined = ft_strjoin(s1, s2);
 //	printf("%s\n", joined);
-//	free(joined); // ← 必ず解放！
+//	free(joined);
 //}

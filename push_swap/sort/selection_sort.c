@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 17:44:00 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/12/28 18:16:37 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/03 21:01:43 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,51 +31,37 @@ void selection_sort(int *a, int n) //*a:配列、 n:配列のindexの数
 {
 	int i;
 	int j;
-	int int_min;
-
-	int_min = i;
+	int min_i;
 
 	i = 0;
 	j = 0;
-	while (i < n)
+	
+	while (i < n - 1)
 	{
+		min_i = i;
+		j = 0;
 		while (j < n)
-		
+		{
+			if (a[min_i] > a[j + i])
+				min_i = a[j + i];
+			j++;
+		}
+		a[i] =min_i;
 		i++;
 	}
 }
-
-
-void print_arr(const int *a, int n)
-{
-	size_t i;
-
-	i = 0;
-	while (i < n)
-	{
-		printf("%d, ", a[i]);
-		i++;
-	}
-	printf("\n");
-}
-
-void swap_int(int *x, int *y)
-{
-	int t;
-
-	t = *x;
-	*x = *y;
-	*y = t;
-}
-
 
 int main(void)
 {
-	int a1[] = {3, 1, 5, 2, 4};
-	int a2[] = {5, 4, 3, 2, 1};
-	int a3[] = {1, 2, 3, 4, 5};
+	int a[] = {9, 2, 7, 5, 1, 3};
+	int i;
 
-	print_arr(a1, 5);
-	selection_sort(a1, 5);
-	print_arr(a1, 5);
+	selection_sort(a, 6);
+	i = 0;
+	while (i < 6)
+	{
+		printf ("%d, ", a[i]);
+		i++;
+	}
+	printf("\n");
 }
