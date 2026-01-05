@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:07 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/05 18:14:22 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/05 19:24:59 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,30 +25,61 @@
 **  - st->sentinel.next から始めて sentinel に戻るまでが要素
 */
 
-static void insertion_sort_int(int *a, size_t n)
+// a[l..r) をソートする（rは含まない）
+static void merge_sort_rec(int *a, int *buf, size_t l, size_t r)
 {
-    size_t i;
-    int j;
-    int key;
+	size_t mid;
+	size_t i;
+	size_t j;
+	size_t k;
 
-    // a[0..0] は要素1つなので「ソート済み」とみなせる → i=1から挿入開始
-    i = 1;
-    while (i < n) // i=1..n-1 の n-1回
-    {
-        key = a[i];       // 挿入したい値を退避（これがあるから上書きしてもOK）
-        j = i - 1;        // ソート済み部分の右端から左へ比較していく
+	if (r - l <= 1)
+		return;
 
-        // keyより大きい要素を1つずつ右へシフトして、keyの入る穴を作る
-        while (j >= 0 && a[j] > key)
-        {
-            a[j + 1] = a[j]; // 右へずらす（swapではない）
-            j--;
-        }
+	mid = l + (r - l) / 2;
+	merge_sort_rec(a, buf, l, mid);
+	merge_sort_rec(a, buf, mid, r);
 
-        // whileを抜けた位置の「右隣」が key の入るべき場所
-        a[j + 1] = key;
-        i++;
-    }
+	// merge: a[l..mid) と a[mid..r) を buf に統合
+	i = l;
+	j = mid;
+	k = l;
+
+	while (i < mid && j < r)
+	{
+		if (a[i] <= a[j])
+			buf[k++] = a[i++];
+		else
+			buf[k++] = a[j++];
+	}
+	while (i < mid)
+		buf[k++] = a[i++];
+	while (j < r)
+		buf[k++] = a[j++];
+
+	// buf[l..r) を a[l..r) に戻す
+	k = l;
+	while (k < r)
+	{
+		a[k] = buf[k];
+		k++;
+	}
+}
+
+static bool merge_sort_int(int *a, size_t n)
+{
+	int *buf;
+
+	if (!a || n <= 1)
+		return false;
+
+	buf = (int *)malloc(sizeof(int) * n);
+	if (!buf)
+		return false;
+
+	merge_sort_rec(a, buf, 0, n);
+	free(buf);
+	return true;
 }
 
 static bool has_duplicate_sorted(const int *sorted, size_t n)
@@ -60,7 +91,6 @@ static bool has_duplicate_sorted(const int *sorted, size_t n)
     {
         if (sorted[i] == sorted[i - 1])
             return true;
-
         i++;
     }
     return false;
@@ -105,7 +135,7 @@ static bool stack_to_array_values(const t_stack *st, int *out, size_t n)
 
     while (cur != &st->sentinel)
     {
-        if (i >= n) //念のため
+        if (i >= n) //念のため（sizeが壊れてたときに検出）
             return false;
         out[i++] = cur->value;
         cur = cur->next;   
@@ -124,14 +154,14 @@ static void apply_rank_to_stack(t_stack *st, const int *sorted, size_t n)
     while (cur != &st->sentinel)
     {
         r = lower_bound_int(sorted, n, cur->value);
-        // r は 0..n-1 のはず（重複なし・値は必ず存在）
+        // r は 0..n-1 のはず（重複なし＆値は必ず存在する前提）
         cur->rank = (int)r;
         cur = cur->next;
     }
 }
 
 /*
-** 公開関数（例）
+** 公開関数
 ** 成功: true
 ** 失敗: false（malloc失敗 or 重複あり 等）
 */
@@ -139,26 +169,32 @@ static void apply_rank_to_stack(t_stack *st, const int *sorted, size_t n)
 bool stack_rankify(t_stack *a)
 {
     size_t n;
-    int *values;
     int *sorted;
     if (!a)
         return false;
     n = a->size;
     if (n <= 1)
         return false;
-    values = (int *)malloc(sizeof(int) * n);
+    // rank を int に入れるので（念のため）上限チェック
+    if (n > (size_t)INT_MAX)
+        return false;
+
     sorted = (int *)malloc(sizeof(int) * n);
-    if (!values || !sorted)
-    	return (free(values), free(sorted), false);
-    if (!stack_to_array_values(a, values, n))
-        return (free(values), free(sorted), false);
-    // sorted = vals のコピーを作ってソート
-    memcpy(sorted, values, sizeof(int) * n);
-    insertion_sort_int(sorted, n);
-    // 重複チェック（push_swapでは必須）
+    if (!sorted)
+        return (free(sorted), false);
+
+    if (!stack_to_array_values(a, sorted, n))
+        return (free(sorted), false);
+
+    if (!merge_sort_int(sorted, n))
+        return (free(sorted), false);
+
+    // push_swapの仕様上は重複NG
     if (has_duplicate_sorted(sorted, n))
-        return (free(values), free(sorted), false);
+        return (free(sorted), false);
+
     // rank を埋める（value は残す）
     apply_rank_to_stack(a, sorted, n);
-	return (free(values), free(sorted), true);
+
+    return (free(sorted), true);
 }
