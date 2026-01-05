@@ -1,22 +1,21 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_push.c                                       :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:41:13 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 15:00:23 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "push_swap.h"
 
-/*
-* insert_after:
-*   pos の直後に node を差し込む
-*/
-// link_between(left, node, right)の引数一個減らしたバージョン
-static void insert_after(t_node *pos, t_node *node)
-{
-	//... <-> a <-> pos <-> b <-> ...
-	node->next = pos->next; // node <-> b
-	node->prev = pos; 		// pos <-> node <-> b → ちゃんとnextとprevにbとposをセットしてあげる
 
-	pos->next->prev = node; // pos->next->prev は b->prev
-	pos->next = node;
-}
 
-void push_front_stack(t_stack *stack, t_node *node)
+void stack_push_front(t_stack *stack, t_node *node)
 {
     if (!stack || !node)
         return;
@@ -26,7 +25,7 @@ void push_front_stack(t_stack *stack, t_node *node)
 }
 
 /* 末尾追加：O(1)（番兵の prev が末尾を指す） */
-void push_back_stack(t_stack *stack, t_node *node)
+void stack_push_back(t_stack *stack, t_node *node)
 {
 	if (!stack || !node)
 		return ;

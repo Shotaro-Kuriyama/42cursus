@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   op_swap.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:40:51 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 14:31:08 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "push_swap.h"
 
-bool op_swap(t_stack *stack)
+static bool op_swap(t_stack *stack)
 {
     t_node *first;
     t_node *second;

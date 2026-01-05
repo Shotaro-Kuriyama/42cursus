@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:49:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/04 14:36:59 by shotarokuri      ###   ########.fr       */
+/*   Updated: 2026/01/05 16:03:13 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,7 @@
 # include <stdbool.h>
 # include <stdint.h>
 # include <limits.h>
+#include <stdio.h>
 
 typedef struct s_node {
     int             value; //入力の“元の値”を保持
@@ -39,44 +40,61 @@ typedef struct s_stack {
 */
 
 /* stack public */
-void    stack_init(t_stack *st);
-void    stack_free(t_stack *st);
-t_node  *stack_pop_front(t_stack *st);
-t_node  *stack_pop_back(t_stack *st);
-void    stack_push_front(t_stack *st, t_node *n);
-void    stack_push_back(t_stack *st, t_node *n);
-bool    stack_contains(const t_stack *st, int v);
-bool    stack_is_sorted(const t_stack *st);
+void    stack_init(t_stack *stack);
+void    stack_free(t_stack *stack);
+void 	insert_after(t_node *pos, t_node *node);
+void 	detach(t_node *node);
+t_node  *stack_pop_front(t_stack *stack);
+t_node  *stack_pop_back(t_stack *stack);
+void    stack_push_front(t_stack *stack, t_node *node);
+void    stack_push_back(t_stack *stack, t_node *node);
+bool    stack_contains(const t_stack *stack, int value);
+bool    stack_is_sorted(const t_stack *a);
 
 /* node */
-t_node  *node_new(int v);
+t_node  *new_node(int value);
 
 /* parse public */
 bool    parse_args_to_stack(int argc, char **argv, t_stack *a);
+
+/* strict int */
+bool    parse_int_strict(const char *s, int *out);
 
 /* split */
 char    **split_ws(const char *s);
 void    free_split(char **toks);
 
-/* strict int */
-bool    parse_int_strict(const char *s, int *out);
 
 /* ops public（命令はここだけを使う） */
-void    op_sa(t_stack *a);
-void    op_sb(t_stack *b);
-void    op_ss(t_stack *a, t_stack *b);
-void    op_pa(t_stack *a, t_stack *b);
-void    op_pb(t_stack *a, t_stack *b);
-void    op_ra(t_stack *a);
-void    op_rb(t_stack *b);
-void    op_rr(t_stack *a, t_stack *b);
-void    op_rra(t_stack *a);
-void    op_rrb(t_stack *b);
-void    op_rrr(t_stack *a, t_stack *b);
+void    sa(t_stack *a);
+void    sb(t_stack *b);
+void    ss(t_stack *a, t_stack *b);
+void    pa(t_stack *a, t_stack *b);
+void    pb(t_stack *a, t_stack *b);
+void    ra(t_stack *a);
+void    rb(t_stack *b);
+void    rr(t_stack *a, t_stack *b);
+void    rra(t_stack *a);
+void    rrb(t_stack *b);
+void    rrr(t_stack *a, t_stack *b);
+
+/* print */
+void print_stack(t_stack *stack);
 
 /* sort */
+int		top_value(t_stack *st);
+int 	second_value(t_stack *st);
+int 	bottom_value(t_stack *st);
+size_t 	min_index(t_stack *st);
+void 	bring_index_to_top_a(t_stack *a, size_t idx);
 void    sort_small(t_stack *a, t_stack *b);  // 2~5の入口
-void    sort_big(t_stack *a, t_stack *b);    // 本番入口
+
+/* rank */
+bool stack_rankify(t_stack *a);
+
+/* sort_big*/
+void 	radix_sort(t_stack *a, t_stack *b);
+//void    sort_big(t_stack *a, t_stack *b);    // 本番入口
 
 /* error */
 int     ps_error(t_stack *a, t_stack *b, char **words);

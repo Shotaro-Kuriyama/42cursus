@@ -1,4 +1,14 @@
-
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   rank.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:40:07 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 18:14:22 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
 #include "push_swap.h"
 #include <stdlib.h>
@@ -17,7 +27,7 @@
 
 static void insertion_sort_int(int *a, size_t n)
 {
-    int i;
+    size_t i;
     int j;
     int key;
 
@@ -131,45 +141,24 @@ bool stack_rankify(t_stack *a)
     size_t n;
     int *values;
     int *sorted;
-
     if (!a)
         return false;
     n = a->size;
     if (n <= 1)
         return false;
-    
     values = (int *)malloc(sizeof(int) * n);
     sorted = (int *)malloc(sizeof(int) * n);
     if (!values || !sorted)
-    {
-        free(values);
-        free(sorted);
-        return false;
-    }
-
+    	return (free(values), free(sorted), false);
     if (!stack_to_array_values(a, values, n))
-    {
-        free(values);
-        free(sorted);
-        return false;
-    }
-
+        return (free(values), free(sorted), false);
     // sorted = vals のコピーを作ってソート
     memcpy(sorted, values, sizeof(int) * n);
     insertion_sort_int(sorted, n);
-
     // 重複チェック（push_swapでは必須）
     if (has_duplicate_sorted(sorted, n))
-    {
-        free(values);
-        free(sorted);
-        return false;
-    }
-    
+        return (free(values), free(sorted), false);
     // rank を埋める（value は残す）
     apply_rank_to_stack(a, sorted, n);
-
-    free(values);
-    free(sorted);
-    return true;
+	return (free(values), free(sorted), true);
 }

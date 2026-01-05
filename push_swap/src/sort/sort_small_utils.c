@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   sort_small_utils.c                                 :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:40:20 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 14:43:29 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 
 #include "push_swap.h"
@@ -5,24 +17,24 @@
 //Aの先頭/2番目/末尾の値を取る（番兵つき前提）
 //前提：sort3（Aが3個）を前提とする。
 
-static int top_value(t_stack *st)
+int top_value(t_stack *st)
 {
-	return st->sentinel.next->value; //next->rank
+	return st->sentinel.next->rank; //next->rank
 }
 
-static int second_value(t_stack *st)
+int second_value(t_stack *st)
 {
-	return st->sentinel.next->next->value;
+	return st->sentinel.next->next->rank;
 }
 
-static int bottom_value(t_stack *st)
+int bottom_value(t_stack *st)
 {
-	return st->sentinel.prev->value;
+	return st->sentinel.prev->rank;
 }
 
 //最小値の位置（index）を探す
 //index=0 が先頭。見つけたら、その位置を返す。
-static size_t min_index(t_stack *st)
+size_t min_index(t_stack *st)
 {
 	size_t idx;
 	size_t best_idx;
@@ -33,15 +45,15 @@ static size_t min_index(t_stack *st)
 		return 0;
 
 	cur = st->sentinel.next;
-	best_value = cur->value;
+	best_value = cur->rank;
 
 	idx = 0;
 	best_idx = 0;
 	while (cur != &st->sentinel)
 	{
-		if (cur->value < best_value)
+		if (cur->rank < best_value)
 		{
-			best_value = cur->value;
+			best_value = cur->rank;
 			best_idx = idx;
 		}
 		cur = cur->next;
@@ -52,7 +64,7 @@ static size_t min_index(t_stack *st)
 
 //指定indexを先頭に持ってくる（回転の選択が学習ポイント）
 
-static void bring_index_to_top_a(t_stack *a, size_t idx)
+void bring_index_to_top_a(t_stack *a, size_t idx)
 {
 	size_t n;
 	size_t rev;

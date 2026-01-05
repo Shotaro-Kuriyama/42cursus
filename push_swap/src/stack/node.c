@@ -1,16 +1,13 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   node.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:41:07 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 15:04:01 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
 
-#include "push_swap.h"
 
-t_node *new_node(int value)
-{
-	t_node *node;
-
-	node = (t_node *)malloc(sizeof(t_node));
-	if (!node)
-		return NULL;
-	node->value = value;
-	node->rank = -1;
-	node->prev = NULL;
-	node->next = NULL;
-	return node;	
-}

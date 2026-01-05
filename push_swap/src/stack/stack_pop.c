@@ -1,20 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_pop.c                                        :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:41:11 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 15:00:10 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "push_swap.h"
 
-/*
-* detach:
-*   node をリストから抜き取る（前後をつなぎ直す）
-*/
-//unlink_node(node)
-static void detach(t_node *node)
-{
-	node->prev->next = node->next; // L <-> node <-> Rで、node->prev->next → L->next = R
-	node->next->prev = node->prev; // L <-> node <-> Rで、node->next->prev → R->prev = L
-	//よってL <-> Rとなりnodeが外れた
-	
-	node->prev = NULL;
-	node->next = NULL;
-}
+
 
 t_node *stack_pop_front(t_stack *stack)
 {

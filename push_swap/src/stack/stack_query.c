@@ -1,7 +1,19 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   stack_query.c                                      :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:41:15 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 16:13:42 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "push_swap.h"
 
-bool stack_contains(t_stack *stack, int value)
+bool stack_contains(const t_stack *stack, int value)
 {
 	t_node *current;
 

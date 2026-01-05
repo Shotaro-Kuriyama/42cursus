@@ -1,19 +1,31 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   op_push.c                                          :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2026/01/05 12:40:38 by skuriyam          #+#    #+#             */
+/*   Updated: 2026/01/05 16:01:58 by skuriyam         ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 
 #include "push_swap.h"
 
 //from→toへpush
-bool op_push(t_stack *from, t_stack *to)
+static bool op_push(t_stack *from, t_stack *to)
 {
 	t_node *node;
 
-    if (!from || !to)
-    	return false;
+	if (!from || !to)
+		return false;
 	if (from->size == 0)
 		return false;
-	node = pop_front_stack(from);
+	node = stack_pop_front(from);
 	if (!node)
 		return false;
-	push_front_stack(to, node);
+	stack_push_front(to, node);
 	return true;
 }
 
