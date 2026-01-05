@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_putnbr.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/11/06 10:05:16 by skuriyam          #+#    #+#             */
-/*   Updated: 2025/11/09 18:35:24 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/04 10:26:56 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

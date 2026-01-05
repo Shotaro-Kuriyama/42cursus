@@ -3,15 +3,15 @@
 /*                                                        :::      ::::::::   */
 /*   sort.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/28 11:55:07 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/03 19:19:41 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/04 13:15:21 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 
-#include "../push_swap.h"
+#include "push_swap.h"
 
 //Aの先頭/2番目/末尾の値を取る（番兵つき前提）
 //前提：sort3（Aが3個）を前提とする。

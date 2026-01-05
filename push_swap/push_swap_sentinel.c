@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   push_swap_sentinel.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
+/*   By: shotarokuriyama <shotarokuriyama@studen    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/31 19:18:03 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/03 17:38:19 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/04 13:48:13 by shotarokuri      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -285,6 +285,7 @@ char **split_ws(const char *p)
     word_count = count_words_ws(p);
 
     words = (char **)malloc(sizeof(*words) * (word_count + 1));
+    
     if (!words)
         return NULL;
 
