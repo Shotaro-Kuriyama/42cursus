@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:07 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/05 19:24:59 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/06 16:45:20 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 ** 前提：t_stack は番兵つき循環双方向リスト
 **  - st->sentinel.next から始めて sentinel に戻るまでが要素
 */
+
 
 // a[l..r) をソートする（rは含まない）
 static void merge_sort_rec(int *a, int *buf, size_t l, size_t r)
