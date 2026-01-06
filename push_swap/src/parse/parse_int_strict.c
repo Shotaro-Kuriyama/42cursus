@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:32 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/06 16:26:30 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/06 19:57:42 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 #include "push_swap.h"
 
-static void sign_determination(const char **p, int *sign)
+static void sign_judgement(const char **p, int *sign)
 {
 	if (**p == '+' || **p == '-')
 	{
@@ -48,6 +48,16 @@ static bool accumulate_digits(const char **p, int sign, int64_t *acc, int *digit
     return true;
 }
 
+//static bool isdigit(char *p)
+//{
+//	while(p)
+//	{
+//		if (!(*p >= '0' && *p <= '9'))
+//			return 
+
+//	}
+//}
+
 bool parse_int_strict(const char *p, int *out_value)
 {
     int     sign;
@@ -61,7 +71,7 @@ bool parse_int_strict(const char *p, int *out_value)
     num_digits = 0;
     while (*p == ' ' || (*p >= 9 && *p <= 13))
         p++;
-    sign_determination(&p, &sign);
+    sign_judgement(&p, &sign);
     if (!accumulate_digits(&p, sign, &accumulator, &num_digits))
         return false;
     if (num_digits == 0)
