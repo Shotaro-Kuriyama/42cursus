@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:32 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/06 19:57:42 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/08 13:11:53 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,6 +58,8 @@ static bool accumulate_digits(const char **p, int sign, int64_t *acc, int *digit
 //	}
 //}
 
+
+// 絶対に自分で理解すること　そうじゃなきゃ許されない
 bool parse_int_strict(const char *p, int *out_value)
 {
     int     sign;

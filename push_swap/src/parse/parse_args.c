@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:30 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/06 16:35:12 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:17:00 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,9 +39,9 @@ static bool words_to_stack(char **words, t_stack *a)
 	i = 0;
 	while (words[i])
 	{
-		if (!parse_int_strict(words[i], &value))
+		if (!parse_int_strict(words[i], &value)) //文字検出
 			return false;
-		if (stack_contains(a, value))
+		if (stack_contains(a, value)) //重複チェック
 			return false;
 		n = new_node(value);
 		if (!n)

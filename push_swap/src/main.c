@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:41:21 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/05 17:33:11 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/08 16:28:28 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,28 @@ void print_stack_value_rank(t_stack *st)
     }
 }
 
+void rank(t_stack *a)
+{
+	t_node *cur;
+	t_node *search;
+	
+	if (a->size == 0 || a->size == 1)
+		return;
+
+	cur = a->sentinel.next;
+	while (cur != &a->sentinel)
+	{
+		cur->rank = 0;
+		search = a->sentinel.next;
+		while (search != &a->sentinel)
+		{
+			if (cur->value > search->value)
+				cur->rank++;
+			search = search->next;
+		}
+		cur = cur->next;
+	}
+}
 
 int main(int argc, char **argv)
 {
@@ -35,7 +57,7 @@ int main(int argc, char **argv)
     stack_init(&a);
     stack_init(&b);
 
-	if (!parse_args_to_stack(argc, argv, &a))
+	if (!parse_args_to_stack(argc, argv, &a)) //ここでstackは完成している（バグはここで検出（重複など）
         return 1;
 
     if (stack_is_sorted(&a))
@@ -44,15 +66,16 @@ int main(int argc, char **argv)
     PS_VALIDATE(&a);
 
     //print_stack(&a); // 必要なら有効化
-	//print_stack_value_rank(&a); // valueとrankの確認用
-	stack_rankify(&a); // rank化実行
-	//print_stack_value_rank(&a); // rank化後の確認用
+	print_stack_value_rank(&a); // valueとrankの確認用
+	rank(&a); // rank化実行
+
+	print_stack_value_rank(&a); // rank化後の確認用
     if (a.size <= 5)
         sort_small(&a, &b);
-    else
+    else {
         radix_sort(&a, &b);
-
-   // print_stack(&a); // 必要なら有効化
+    }
+	print_stack(&a); // 必要なら有効化
         
     stack_free(&a);
     stack_free(&b);
