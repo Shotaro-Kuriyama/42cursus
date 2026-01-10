@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:40:07 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/06 16:45:20 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/10 16:43:59 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,28 +34,36 @@ static void merge_sort_rec(int *a, int *buf, size_t l, size_t r)
 	size_t j;
 	size_t k;
 
-	if (r - l <= 1)
+	if (r - l <= 1) //停止条件
 		return;
 
-	mid = l + (r - l) / 2;
+	mid = l + (r - l) / 2; //真ん中を作る（オーバーフロー対策で式変形してる）
 	merge_sort_rec(a, buf, l, mid);
 	merge_sort_rec(a, buf, mid, r);
+	// ↑ この2行が終わった時点で a[l..mid) と a[mid..r) は「それぞれソート済み」になっている
 
 	// merge: a[l..mid) と a[mid..r) を buf に統合
-	i = l;
-	j = mid;
-	k = l;
+	i = l;     // 左列の読み取り位置
+	j = mid;   // 右列の読み取り位置
+	k = l;     // buf へ書き込む位置
 
-	while (i < mid && j < r)
+
+	//左列と右列を比較して、
+	while (i < mid && j < r)//左列がまだ残ってる&&右列もまだ残ってる
 	{
 		if (a[i] <= a[j])
 			buf[k++] = a[i++];
 		else
 			buf[k++] = a[j++];
 	}
-	while (i < mid)
+	//　この時点で左列と右列を「比較して片方代入」してるので、
+	//　必ずどちらかが残ることになる（片方が終端に到達したので比較を終える）
+
+	//奇数で左右のサイズが違っても、
+	//比較ループのあとに “残りを全部流し込む処理” があるから大丈夫
+	while (i < mid) //左がまだ残ってたら
 		buf[k++] = a[i++];
-	while (j < r)
+	while (j < r) //右がまだ残ってたら
 		buf[k++] = a[j++];
 
 	// buf[l..r) を a[l..r) に戻す
@@ -71,7 +79,7 @@ static bool merge_sort_int(int *a, size_t n)
 {
 	int *buf;
 
-	if (!a || n <= 1)
+	if (!a)
 		return false;
 
 	buf = (int *)malloc(sizeof(int) * n);
@@ -83,44 +91,30 @@ static bool merge_sort_int(int *a, size_t n)
 	return true;
 }
 
-static bool has_duplicate_sorted(const int *sorted, size_t n)
-{
-    size_t i;
-
-    i = 1;
-    while (i < n)
-    {
-        if (sorted[i] == sorted[i - 1])
-            return true;
-        i++;
-    }
-    return false;
-}
-
 // 二分探索
 //sorted は「小さい順に並んだ値の一覧」。
 //sorted の中で value が見つかる位置 = 「小さい順の番号」= rank。
-static size_t lower_bound_int(const int *sorted, size_t n, int x)
+static size_t binary_search(const int *sorted, size_t n, int x)
 {
     // sorted の中で「x以上が初めて現れる位置」を返す
     // （xが必ず存在する前提なら、その位置がxのindexになる）
 
-    size_t lo;
-    size_t hi;
+    size_t start;
+    size_t last;
     size_t mid;
 
-    lo = 0;
-    hi = n;
+    start = 0;
+    last = n;
 
-    while (lo < hi)
+    while (start < last)
     {
-        mid = lo + (hi - lo) / 2;
+        mid = start + (last - start) / 2;
         if (sorted[mid] < x)
-            lo = mid + 1;
-        else    
-            hi = mid;
+            start = mid + 1;
+        else
+            last = mid;
     }
-    return lo;
+    return start;
 }
 
 static bool stack_to_array_values(const t_stack *st, int *out, size_t n)
@@ -136,8 +130,6 @@ static bool stack_to_array_values(const t_stack *st, int *out, size_t n)
 
     while (cur != &st->sentinel)
     {
-        if (i >= n) //念のため（sizeが壊れてたときに検出）
-            return false;
         out[i++] = cur->value;
         cur = cur->next;   
     }
@@ -148,15 +140,15 @@ static void apply_rank_to_stack(t_stack *st, const int *sorted, size_t n)
 {
     // 各 node の value を見て rank を決め、node->rank に保存する
     t_node *cur;
-    size_t r;
+    size_t rank;
 
     cur = st->sentinel.next;
 
     while (cur != &st->sentinel)
     {
-        r = lower_bound_int(sorted, n, cur->value);
+        rank = binary_search(sorted, n, cur->value);
         // r は 0..n-1 のはず（重複なし＆値は必ず存在する前提）
-        cur->rank = (int)r;
+        cur->rank = (int)rank;
         cur = cur->next;
     }
 }
@@ -167,15 +159,13 @@ static void apply_rank_to_stack(t_stack *st, const int *sorted, size_t n)
 ** 失敗: false（malloc失敗 or 重複あり 等）
 */
 
-bool stack_rankify(t_stack *a)
+bool stack_ranking(t_stack *a)
 {
     size_t n;
     int *sorted;
     if (!a)
         return false;
     n = a->size;
-    if (n <= 1)
-        return false;
     // rank を int に入れるので（念のため）上限チェック
     if (n > (size_t)INT_MAX)
         return false;
@@ -188,10 +178,6 @@ bool stack_rankify(t_stack *a)
         return (free(sorted), false);
 
     if (!merge_sort_int(sorted, n))
-        return (free(sorted), false);
-
-    // push_swapの仕様上は重複NG
-    if (has_duplicate_sorted(sorted, n))
         return (free(sorted), false);
 
     // rank を埋める（value は残す）

@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/01/05 12:41:21 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/08 16:28:28 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/10 16:26:52 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,7 @@ int main(int argc, char **argv)
 
     //print_stack(&a); // 必要なら有効化
 	print_stack_value_rank(&a); // valueとrankの確認用
-	rank(&a); // rank化実行
+	stack_ranking(&a); // rank化実行
 
 	print_stack_value_rank(&a); // rank化後の確認用
     if (a.size <= 5)

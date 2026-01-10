@@ -6,7 +6,7 @@
 /*   By: skuriyam <skuriyam@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/12/23 16:49:55 by skuriyam          #+#    #+#             */
-/*   Updated: 2026/01/05 16:03:13 by skuriyam         ###   ########.fr       */
+/*   Updated: 2026/01/10 16:24:56 by skuriyam         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ void 	bring_index_to_top_a(t_stack *a, size_t idx);
 void    sort_small(t_stack *a, t_stack *b);  // 2~5の入口
 
 /* rank */
-bool stack_rankify(t_stack *a);
+bool stack_ranking(t_stack *a);
 
 /* sort_big*/
 void 	radix_sort(t_stack *a, t_stack *b);
