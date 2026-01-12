@@ -1,0 +1,233 @@
+実際の評価項目の例 
+signature.txtはgitのルートにあるか          
+ls -l
+そこにあるsignatureは.vdiファイルにあるsignatureと全く同じか　diffコマンドで検証すること
+ディレクトリ確認
+VBoxManage list hdds
+/sgoinfre/ftoyoda/VirtualBox VMs/Born2BeRoot/
+shasum Born2BeRoot.vdi > check.txt
+diff signature.txt check.txt 
+rm check.txt
+virtual machineのクローンを作っておく
+
+プロジェクト全体像の説明
+virtual machineをスタートすること
+次の内容を説明すること
+Virtual machineはどのように動くか
+メインOSの中に作成する、もう一つのOS
+そのoperating systemをなぜ選択したのか 
+debianはUbuntuだから多少は使ったことがある。
+また、Debianに関するドキュメントの方が多く、パッケージ管理が初心者にもわかりやすい。
+CentOS(Rocky)　と　Debianの違い
+	RockyはCentOS Redhatの流れをくみどちらかというとエンタープライズむけ、Debianはコミュニティ主導　パッケージ管理のコマンドが違い、例えばRockyのインストールはdnf、Debianのインストールはapt
+virtual machineの目的
+実環境とは分離された仮想環境での試験、例えばセキュリティの試験や実験など。
+Debianを選択していたならaptitudeとaptの違い、APPAとは何か
+aptitudeは依存関係も含めてダウンロードすることができる。
+AppArmour Linux向けのセキュリティモジュールで、各アプリケーションに専用の「プロファイル」を適用することで、そのファイルやシステムへのアクセス権限を制限します。これにより、たとえ脆弱性が発見されても、攻撃者がシステム全体に被害を及ぼすのを防ぎます。
+Defence 中スクリプトは10分置きに表示されること
+
+簡単な設定
+GUIが入っていないこと
+仮想環境に接続するまえにパスワードを要求されること
+MangoAMD64
+SSH　サービスがスタートしているか確認する
+sudo systemctl status ssh
+ssh ftoyoda@localhost -p 4242
+一人のユーザーと接続すること。Root user ではないこと
+ftoyoda / AppleAMD64
+パスワードに注意。課題の要件通りになっていること
+UFWサービスがスタートしているか確認する
+sudo ufw status
+Status: active
+
+To                         Action      From
+--                         ------      ----
+4242                       ALLOW       Anywhere                  
+4242 (v6)                  ALLOW       Anywhere (v6) 
+
+Debian　かCentOS　か確認する
+cat /etc/os-release
+
+ユーザー
+評価される生徒のユーザーが存在するかどうか確認する
+id ftoyoda
+sudo 　とuser42グループに所属していることを確認
+groups ftoyoda
+パスワードポリシーができているかを次のステップに沿って確認する
+新しいユーザーをcreateする
+sudo adduser testuser
+パスワードをアサインする。ルールに則って。
+1234
+A1234
+Ab1234
+Apricot1234
+		・10文字以上
+		・大文字１つ以上
+		・小文字１つ以上
+		・数字１つ以上
+		・同文字３連続禁止
+		・ユーザー名を含まない
+		以上の条件を満たさない場合、弾かなければアウト
+
+生徒はどのようにパスワードルールを設定するか説明する
+		変更日数関連→nano /etc/login.defs
+		文字制限関連→nano /etc/pam.d/common-password
+新しいユーザーをevaluatingグループを作って追加するように頼む
+sudo addgroup evaluating
+		sudo adduser {user_name} evaluating
+		sudo adduser {user_name} sudo
+其のユーザーがevaluatingグループに所属したかどうか確認する
+	groups testuser
+パスワードポリシーの利点を説明してもらう
+複雑なパスワードにすることで辞書攻撃に強くなる
+一定頻度で変更することで使いまわしを防ぐ
+その実施の利点と欠点もあわせて説明してもらう
+ユーザーが覚えておられず、メモってしまったりする
+更新頻度が多いと作業コストがたかい
+実際には長いパスワードのほうが防御率が高いらしい
+
+ホストネームとパーティション
+ホストネームは次のようになっているか login42(つまり、ftoyoda42)
+hostname
+ホストネームを評価者のログインに変更する　マシンをリスタートして、ホストネームが変わっていなければ失格
+		・タグ？の変更
+		sudo hostnamectl set-hostname {評価者名}42
+		・本家の変更
+		sudo nano /etc/hosts
+		→二行目IPアドレスっぽい数字の次の文字列がホスト名なのでこちらも変更
+		sudo reboot
+		ssh ftoyoda@localhost -p 4242
+		hostnamectl
+もとのホストネームでマシンをリスタートする
+sudo hostnamectl set-hostname ftoyoda42
+sudo nano /etc/hosts
+		sudo reboot
+どのようにパーティションを見るのか聞く
+lsblk
+課題文にあるパーティションと比べる　ボーナスをやっていればボーナス
+どのようにLVM は動くのか、そもそもそれは何なのか説明してもらう
+LVM(Logical Volume Manager 論理パーティションとは)パーティションをあとから増やしたり減らしたり柔軟に使うことができるパーティション
+sda 仮想ハードディスク本体　物理PCのHDDと同じ役割
+sda1Mount pointがbootのパーティションで、カーネルや起動に必要なファイルが入っているパーティション
+sda2 拡張パーティションの先頭セクタ？
+sda5 暗号化されたパーティション
+LVM
+root
+home ホームディレクトリ
+swap 仮想メモリ領域
+
+SUDO
+sudoプログラムはvmにインストールされているかどうか確認する
+sudo -V
+さっき新しく作ったユーザーをsudoに追加してもらう
+	sudo adduser {user_name} sudo
+getent group sudo
+sudoには厳格なルールが適用されているが、　生徒はsudoの価値とどのように使うのかを実際の例をつかって説明する。
+sudo は 「一時的に管理者権限を借りるためのゲート」 であり、
+使い方を誤ると システム全体を壊せる危険な操作が可能になる。
+だから厳格なルール（ログ、制限時間、ポリシー）がある。
+例えばソフトウェアのインストールなど
+rootを常用せず安全性が保てる
+
+”/var/log/sudo/”フォルダーが存在しており、少なくとも１つのファイルが存在していること。
+sudo ls /var/log/sudo/
+sudoを使ったコマンドの履歴を確認する。
+sudo cat /var/log/sudo/sudo_config
+最後に、sudo経由で何かコマンドを実行してみること。フォルダ内のファイルがアップデートされることを確認する。
+sudo addgroup tokyogirls
+sudo delgroup tokyogirls
+sudo cat /var/log/sudo/sudo_config
+sudoコンフィグの設定場所 
+nano /etc/sudoers.d/sudo_config
+
+
+UFW
+UFWプログラムはvmにインストールされているかどうか
+	sudo ufw --version
+sudo ufw status
+ちゃんと動いているかどうか
+sudo ufw status verbose
+生徒は、UFWとは何か、それを使う価値は何かを説明できる
+Ubuntu 系で使われる Uncomplicated Fire wall 簡易ファイアウォール管理ツール。
+iptables の複雑さを隠し、シンプルな文法でポート制御を扱える。
+
+使う価値
+ポートを閉じる／開ける操作が直感的
+サーバーへの不要なアクセスを遮断できる（最小露出）
+ログが残るため、トラブル調査にも使える
+設定ミスが起きにくいため、学習環境や小規模サーバーで実用的
+
+UFWのアクティブなルールをリストアップする。ポート4242に何かルールがあるはず。
+sudo ufw status numbered
+ポート８０８０を開ける新しいルールを追加する。それがアクティブルールをリストすることで追加されたか確認する。
+sudo ufw allow 8080/tcp
+sudo ufw status numbered
+最後に、新たに付け加えたルールを削除する。
+	sudo ufw delete 2
+sudo ufw delete 3
+	sudo ufw status numbered
+
+SSH
+SSHプログラムはvmにインストールされているかどうか
+ssh -V
+ちゃんと動いているかどうか
+sudo systemctl status ssh
+Ctl + C
+生徒は、SSHとは何か、それを使う価値は何かを説明できる
+リモートのコンピュータに 暗号化された通信 で接続するためのプロトコル。主にターミナル操作で使う。
+
+価値
+通信内容が暗号化されるため盗聴・改ざんにssh newuser@localhost -p 4242強い
+管理者が遠隔で安全にサーバー操作できる
+だから42の課題提出や採点のgit clone, git pushにも使われている
+SSHサーバーはポート4242のみを使っていることを証明する
+sudo nano /etc/ssh/sshd_config
+sudo ss -tulpn | grep ssh
+生徒は、SSHを新たに作成したユーザーでログインするのにどのように使うかを説明する
+	exit
+ssh testuser@localhost -p 4242
+ApricotAMD64
+そのために、キーまたはシンプルなパスワードを利用できる
+
+課題にあるように、ルートユーザーではSSHを使えないことも確認する
+grep PermitRootLogin /etc/ssh/sshd_config
+
+PermitRootLogin no
+
+または cat /etc/ssh/sshd_config
+
+ユーザー消しておく
+sudo deluser --remove-home testuser
+sudo delgroup evaluating
+
+Script　Monitoring
+スクリプトがどのように動いているのか、コードを見せて説明できる
+sudo cat monitoring.sh
+ls -l monitoring.sh
+cronとは何か。
+	cron = 時刻・間隔を指定してコマンドやスクリプトを自動実行させるOS の裏側で常に動き続けるバックグラウンドサービス、デーモンの一つ
+設定ファイル：crontab
+ユーザーごとにスケジュールを持てる（crontab -e）
+曜日・時間・分・日付などで細かく指定可能
+ここでは 「サーバー起動時」＋「10分おき／1分おき」で monitoring スクリプトを走らせるために使う。
+サーバーがスタートしてから１０ふん置きにスクリプトが走るのをどのように実現したか説明する。
+sudo crontab -e
+その後、１ふん置きに走るようにスクリプトを変える。
+* * * * * /usr/local/bin/monitoring.sh
+色々な変数を入れてみる。
+最後に生徒は、スクリプトを変えずに、スクリプトが走るのを止める。
+sudo crontab -e
+コメントアウト
+#@reboot /usr/local/bin/monitoring.sh
+#* * * * * /usr/local/bin/monitoring.sh
+
+または
+sudo systemctl stop cron
+sudo systemctl disable cron
+
+最後にサーバーをリスタートする
+sudo reboot
+スクリプトは変わっておらず、同じ権限で同じ場所にあることを確認する
+ls -l /monitoring.sh
+sudo cat /monitoring.sh
