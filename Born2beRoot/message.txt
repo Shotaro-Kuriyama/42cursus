@@ -13,13 +13,18 @@ virtual machineのクローンを作っておく
 プロジェクト全体像の説明
 virtual machineをスタートすること
 次の内容を説明すること
+
+1.
 Virtual machineはどのように動くか
 メインOSの中に作成する、もう一つのOS
+
+2.
 そのoperating systemをなぜ選択したのか 
 debianはUbuntuだから多少は使ったことがある。
 また、Debianに関するドキュメントの方が多く、パッケージ管理が初心者にもわかりやすい。
 CentOS(Rocky)　と　Debianの違い
 	RockyはCentOS Redhatの流れをくみどちらかというとエンタープライズむけ、Debianはコミュニティ主導　パッケージ管理のコマンドが違い、例えばRockyのインストールはdnf、Debianのインストールはapt
+
 virtual machineの目的
 実環境とは分離された仮想環境での試験、例えばセキュリティの試験や実験など。
 Debianを選択していたならaptitudeとaptの違い、APPAとは何か
