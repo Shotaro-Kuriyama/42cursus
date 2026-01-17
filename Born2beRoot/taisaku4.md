@@ -68,7 +68,9 @@ sudo systemctl stop cron
 
 
 # 0) OS / hostname
-
+cat /etc/os-release
+uname -a
+hostnamectl
 
 # 1) user / group
 
